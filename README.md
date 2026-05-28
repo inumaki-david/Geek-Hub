@@ -167,3 +167,16 @@ O sistema utiliza um banco de dados relacional composto por 4 tabelas principais
 ---
 #### ENTIDADE: *`emprestimos`* (Contrato de Aluguéis)
 *Entidade que relaciona as entidades `membros`, `produtos` e `usuarios` (quem fez o empréstimo).*
+| Campo | Tipo | Restrições | Descrição |
+| :--- | :--- | :--- | :--- |
+| *`id`* | SERIAL | PRIMARY KEY | Número do contrato de aluguel. |
+| *`produto_id`* | INT | FOREIGN KEY, RESTRICT | ID do produto. O RESTRICT impede exclusão se houver aluguel (RN01). |
+| *`membro_id`* | INT | FOREIGN KEY, RESTRICT | ID do membro. O RESTRICT impede exclusão do membro (RN02). |
+| *`usuario_id`* | INT | FOREIGN KEY, RESTRICT | ID do funcionário que registrou a saída. |
+| *`data_inicio`* | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Data e hora exatas da saída (RF14). |
+| *`data_fim_prevista`* | DATE | NOT NULL | Data combinada para devolução (RF14). | 
+| *`data_devolucao`* | DATE | NULL | Data em que o item foi realmente entregue (RF16). | 
+| *`valor_diaria_cobrado`* | DECIMAL(10,2) | NOT NULL | Preço da diária congelado no momento da saída (RN06). | 
+| *`multa_aplicada`* | DECIMAL(10,2) | DEFAULT 0.00 | Valor da multa caso haja atraso na entrega (RF17). |
+| *`status`* | VARCHAR(20) | DEFAULT 'Pendente' | Situação: 'Pendente', 'Concluído', 'Atrasado'. |
+
