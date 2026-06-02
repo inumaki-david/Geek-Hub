@@ -102,7 +102,7 @@ O sistema deve realizar as seguintes funções principais:
 | :--- | :--- | :--- | :--- |
 | **RNF04** | Proteção de Banco de Dados | A comunicação entre o PHP e o PostgreSQL deve ser feita obrigatoriamente utilizando a extensão **PDO** (PHP Data Objects) com Prepared Statements, para evitar ataques de injeção de SQL (SQL Injection). | Alta | 
 | **RNF05** | Criptografia de Senhas | As senhas dos usuários ("Gerente" e "Funcionário Comum") nunca devem ser salvas em texto limpo. O sistema deve utilizar algoritmos de hash seguros nativos do PHP (como o *password_hash()*) antes de gravá-las no banco. | Alta |
-| **RNF06** | Gestão de Sessões | O controle de acesso e a diferenciação entre os perfis de usuário (Gerente vs. Funcionário) devem ser gerenciados através do uso seguro de sessões do PHP (*$_SESSION*). | Alta |
+| **RNF06** | Gestão de Sessões | O controle de acesso e a diferenciação entre os perfis de usuário (Gerente e Funcionário) devem ser gerenciados através do uso seguro de sessões do PHP (*$_SESSION*). | Alta |
 ---
 #### Módulo de Usabilidade e Desempenho
 | ID | Título | Descrição | Prioridade |
