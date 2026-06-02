@@ -131,7 +131,7 @@ O sistema deve realizar as seguintes funções principais:
 | **RN08** | Autenticação Dupla para Deletes | Para efetivar a exclusão de qualquer registro (membro ou produto), não basta estar logado como Gerente; o sistema deve exigir a digitação da senha novamente na tela de exclusão. | 
 ---
 
-### 3.4 Estruturação do Banco de Dados 
+### 4. Estruturação do Banco de Dados 
 O sistema utiliza um banco de dados relacional composto por 4 tabelas principais. As relações garantem a integridade referencial exigida pelas Regras de Negócio.
 
 #### ENTIDADE: *`usuarios`* (Funcionários e Gerentes)
@@ -182,9 +182,64 @@ O sistema utiliza um banco de dados relacional composto por 4 tabelas principais
 
 ---
 
-## 4. Diagramas 
+## 5. Diagramas 
 
-### 4.1 Diagrama de Casos de Uso
+###  5.1 Diagrama de Entidade-Relacionamento (MER)
+
+O diagrama abaixo ilustra a estrutura das tabelas do banco de dados e os seus relacionamentos.
+
+```mermaid
+erDiagram
+    %% Tabela de Usuários (Funcionários/Gerentes)
+    USUARIOS {
+        int id PK "Identificador único"
+        varchar nome "Not Null"
+        varchar email "Unique, Not Null"
+        varchar senha_hash "Not Null"
+        varchar perfil_acesso "Gerente ou Comum"
+    }
+
+    %% Tabela de Membros (Clientes)
+    MEMBROS {
+        int id PK "Identificador único"
+        varchar nome "Not Null"
+        varchar cpf "Unique, Not Null"
+        varchar telefone ""
+        boolean status_ativo "Default True"
+    }
+
+    %% Tabela de Produtos (Acervo)
+    PRODUTOS {
+        int id PK "Identificador único"
+        varchar titulo "Not Null"
+        varchar categoria "Filme, Jogo, etc"
+        int quantidade "Default 0"
+        decimal valor_diaria "Not Null"
+        boolean disponivel "Default True"
+    }
+
+    %% Tabela de Empréstimos (Transações)
+    EMPRESTIMOS {
+        int id PK "Número do contrato"
+        int produto_id FK "Protegido por RESTRICT"
+        int membro_id FK "Protegido por RESTRICT"
+        int usuario_id FK "Quem registrou"
+        timestamp data_inicio "Data/Hora de saída"
+        date data_fim_prevista "Data combinada"
+        date data_devolucao "Data real de entrega"
+        decimal valor_diaria_cobrado "Preço congelado"
+        decimal multa_aplicada "Valor de atraso"
+        varchar status "Pendente, Concluído, Atrasado"
+    }
+
+    %% Relações (Cardinalidade)
+    USUARIOS ||--o{ EMPRESTIMOS : "registra"
+    MEMBROS ||--o{ EMPRESTIMOS : "realiza"
+    PRODUTOS ||--o{ EMPRESTIMOS : "esta_incluso_em"
+
+```
+---
+### 5.2 Diagrama de Casos de Uso
 
 O diagrama abaixo ilustra as interações entre os usuários do sistema (Funcionário Comum e Gerente) e as principais funcionalidades do Geek Hub. Ele também demonstra a relação de herança de perfis e as dependências de segurança (Includes).
 
@@ -241,10 +296,8 @@ flowchart LR
     UC05 -. "<<include>>\n(Obrigatório)" .-> UC12
     UC09 -. "<<include>>\n(Obrigatório)" .-> UC12
 ```
-
 ---
-
-### 4.2 Diagrama de Classes
+### 5.3 Diagrama de Classes
 
 O diagrama de classes abaixo ilustra a estrutura das entidades do sistema, os seus atributos (variáveis) e os seus métodos principais (funções). Também demonstra as relações de multiplicidade entre as classes (ex: Um Membro pode ter vários Empréstimos).
 
@@ -313,10 +366,8 @@ classDiagram
     }
 
 ```
-
 ---
-
-### 4.3 Diagrama de Fluxo 
+### 5.4 Diagrama de Fluxo 
 
 O fluxograma abaixo detalha o processo de **Empréstimo e Devolução** de um item, que é o núcleo da locadora. Ele demonstra as validações de regras de negócio (RN) que o sistema realiza de forma invisível no back-end (PHP) para garantir a integridade da operação.
 
