@@ -180,3 +180,179 @@ O sistema utiliza um banco de dados relacional composto por 4 tabelas principais
 | *`multa_aplicada`* | DECIMAL(10,2) | DEFAULT 0.00 | Valor da multa caso haja atraso na entrega (RF17). |
 | *`status`* | VARCHAR(20) | DEFAULT 'Pendente' | Situação: 'Pendente', 'Concluído', 'Atrasado'. |
 
+---
+
+## 4. Diagramas 
+
+### 4.1 Diagrama de Casos de Uso
+
+O diagrama abaixo ilustra as interações entre os usuários do sistema (Funcionário Comum e Gerente) e as principais funcionalidades do Geek Hub. Ele também demonstra a relação de herança de perfis e as dependências de segurança (Includes).
+
+```mermaid
+flowchart LR
+    %% Atores
+    Funcionario["Funcionário Comum"]
+    Gerente["Gerente (Adm)"]
+
+    %% Sistema Geek Hub (Fronteira)
+    subgraph Geek Hub - Sistema de Locadora
+        direction TB
+        
+        %% Casos de Uso - Acesso
+        UC01(["Fazer Login (Autenticação)"])
+        
+        %% Casos de Uso - Acervo
+        UC02(["Cadastrar Produto"])
+        UC03(["Consultar Produto/Acervo"])
+        UC04(["Alterar Status do Produto"])
+        UC05(["Excluir Produto"])
+        
+        %% Casos de Uso - Membros
+        UC06(["Cadastrar Membro"])
+        UC07(["Consultar Membro"])
+        UC08(["Alterar Status do Membro"])
+        UC09(["Excluir Membro"])
+        
+        %% Casos de Uso - Empréstimos
+        UC10(["Registrar Empréstimo"])
+        UC11(["Registrar Devolução e Multas"])
+        
+        %% Casos de Uso - Segurança / Regras
+        UC12(["Confirmar Senha Adm (Dupla Autenticação)"])
+    end
+
+    %% Associações do Funcionário
+    Funcionario --- UC01
+    Funcionario --- UC02
+    Funcionario --- UC03
+    Funcionario --- UC04
+    Funcionario --- UC06
+    Funcionario --- UC07
+    Funcionario --- UC08
+    Funcionario --- UC10
+    Funcionario --- UC11
+
+    %% Associações do Gerente
+    Gerente -->|Herda todos os acessos do Funcionário| Funcionario
+    Gerente --- UC05
+    Gerente --- UC09
+
+    %% Relacionamentos de Inclusão (Regras de Negócio)
+    UC05 -. "<<include>>\n(Obrigatório)" .-> UC12
+    UC09 -. "<<include>>\n(Obrigatório)" .-> UC12
+```
+
+---
+
+### 4.2 Diagrama de Classes
+
+O diagrama de classes abaixo ilustra a estrutura das entidades do sistema, os seus atributos (variáveis) e os seus métodos principais (funções). Também demonstra as relações de multiplicidade entre as classes (ex: Um Membro pode ter vários Empréstimos).
+
+```mermaid
+classDiagram
+    %% Relações entre as Classes (Multiplicidade)
+    Usuario "1" -- "*" Emprestimo : registra >
+    Membro "1" -- "*" Emprestimo : realiza >
+    Produto "1" -- "*" Emprestimo : é_alvo_de >
+
+    %% Classe Usuario
+    class Usuario {
+        -int id
+        -String nome
+        -String email
+        -String senha_hash
+        -String perfil_acesso
+        +autenticar(email, senha) bool
+        +cadastrarUsuario() void
+        +exigirSenhaAdm(senha) bool
+    }
+
+    %% Classe Membro
+    class Membro {
+        -int id
+        -String nome
+        -String cpf
+        -String telefone
+        -boolean status_ativo
+        +cadastrarMembro() void
+        +atualizarStatus() void
+        +verificarPendencias() bool
+        +excluirMembro() void
+    }
+
+    %% Classe Produto
+    class Produto {
+        -int id
+        -String titulo
+        -String categoria
+        -int quantidade
+        -float valor_diaria
+        -boolean disponivel
+        +cadastrarProduto() void
+        +atualizarEstoque(quantidade) void
+        +alterarStatus() void
+        +excluirProduto() void
+    }
+
+    %% Classe Emprestimo (Classe Associativa/Transacional)
+    class Emprestimo {
+        -int id
+        -int produto_id
+        -int membro_id
+        -int usuario_id
+        -DateTime data_inicio
+        -Date data_fim_prevista
+        -Date data_devolucao
+        -float valor_diaria_cobrado
+        -float multa_aplicada
+        -String status
+        +registrarSaida() void
+        +registrarDevolucao() void
+        +calcularMulta(diasAtraso) float
+        +calcularTotal() float
+    }
+
+```
+
+---
+
+### 4.3 Diagrama de Fluxo 
+
+O fluxograma abaixo detalha o processo de **Empréstimo e Devolução** de um item, que é o núcleo da locadora. Ele demonstra as validações de regras de negócio (RN) que o sistema realiza de forma invisível no back-end (PHP) para garantir a integridade da operação.
+
+```mermaid
+flowchart TD
+
+    %% Início do Empréstimo
+    A([Início: Solicitação de Empréstimo]):::startEnd --> B{Produto Disponível?<br>Estoque > 0?}:::decision
+    
+    %% Validações de Saída
+    B -- Não --> C[Bloquear Ação: Exibir Erro RN05]:::error --> Z([Fim da Operação]):::startEnd
+    B -- Sim --> D{Membro possui<br>Pendências?}:::decision
+    
+    D -- Sim --> E[Bloquear Ação: Exibir Erro RN03]:::error --> Z
+    D -- Não --> F[Registrar Empréstimo no DB]:::process
+    
+    %% Efetivação do Empréstimo
+    F --> G[Congelar Valor da Diária RN06]:::process
+    G --> H[Atualizar Produto para Indisponível]:::process
+    H --> I([Fim: Produto Entregue ao Cliente]):::startEnd
+
+    %% Linha do tempo imaginária para devolução
+    I -. "Dias depois..." .-> J([Início: Processo de Devolução]):::startEnd
+    
+    %% Processo de Devolução
+    J --> K{Entregue com<br>Atraso?}:::decision
+    
+    K -- Sim --> L[Calcular Multa + Diárias Extras RN07]:::process
+    K -- Não --> M[Calcular apenas Valor Padrão]:::process
+    
+    L --> N[Processar Pagamento e Finalizar Contrato]:::process
+    M --> N
+    
+    N --> O[Atualizar Produto para Disponível]:::process
+    O --> P([Fim: Devolução Concluída]):::startEnd
+
+```
+
+---
