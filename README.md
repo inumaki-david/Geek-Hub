@@ -65,10 +65,10 @@ O sistema deve realizar as seguintes funções principais:
 #### Módulo de Gestão de Acervo 
 | ID | Título | Descrição | Prioridade |
 | :--- | :--- | :--- | :--- |
-| **RF05** | Cadastro de Produtos | O sistema deve fornecer um formulário para inserir novos títulos no acervo (filmes, jogos, mangás e outros produtos geeks e a quantidade de um mesmo produto que será cadastrado). | Alta |
-| **RF06** | Consulta de Produtos | O sistema deve listar todos os títulos e produtos cadastrados, permitindo a leitura e visualização de todas as informações do acervo. | Alta |
+| **RF05** | Cadastro de Produtos | O sistema deve fornecer um formulário para inserir novos títulos no acervo (filmes, jogos, mangás e outros produtos geeks, a quantidade de um mesmo produto que será cadastrado) e um campo de upload para anexar a capa promocional (imagem) do produto. | Alta |
+| **RF06** | Consulta de Produtos | O sistema deve listar todos os títulos e produtos cadastrados, permitindo a leitura e visualização de todas as informações do acervo e exibir a imagem da capa/produto em miniatura juntamente com a leitura de todas as informações do acervo. | Alta |
 | **RF07** | Alteração de Status do Produto | O sistema deve permitir a atualização do estado do produto, indicando claramente se a sua situação atual é "Disponível" ou "Indisponível". | Alta |
-| **RF08** | Exclusão Segura de Produtos | O sistema deve permitir a remoção de um título do banco de dados mediante um sistema de verificação (confirmação em duas etapas) para evitar apagamentos acidentais. | Alta |
+| **RF08** | Exclusão Segura de Produtos | O sistema deve permitir a remoção de um título do banco de dados (e do arquivo físico de imagem) mediante um sistema de verificação (confirmação em duas etapas) para evitar apagamentos acidentais. | Alta |
 ---
 #### Módulo de Gestão de Clientes e Empréstimos
 | ID | Título | Descrição | Prioridade |
@@ -108,8 +108,9 @@ O sistema deve realizar as seguintes funções principais:
 | ID | Título | Descrição | Prioridade |
 | :--- | :--- | :--- | :--- |
 | **RNF07** | Interface Intuitiva | A interface gráfica (HTML/CSS) deve ser simples, limpa e padronizada, garantindo que os funcionários consigam operar o sistema (cadastros e empréstimos) com o mínimo de treinamento prévio. | Média |
-| **RNF08** | Responsividade Básica | O layout das telas principais deve adaptar-se de forma razoável a diferentes tamanhos de tela (como monitores de balcão e tablets), facilitando o uso pelos funcionários enquanto verificam o acervo nas prateleiras. | Baixa |
-| **RNF09** | Feedback do Sistema | O sistema deve fornecer mensagens de aviso claras e objetivas em caso de erro, sucesso ou validação negada (ex: "Produto excluído com sucesso" ou "Acesso negado"). | Média | 
+| **RNF08** | Processamento Seguro de Imagens | O upload de capas de produtos deve restringir rigorosamente os formatos de arquivo permitidos (ex: JPG, PNG, WEBP) e limitar o tamanho máximo de envio (ex: 2MB) via PHP, renomeando o arquivo com um hash único antes de salvá-lo no diretório físico do servidor para evitar conflitos e execução de scripts maliciosos. | Alta |
+| **RNF09** | Responsividade Básica | O layout das telas principais deve adaptar-se de forma razoável a diferentes tamanhos de tela (como monitores de balcão e tablets), facilitando o uso pelos funcionários enquanto verificam o acervo nas prateleiras. | Baixa |
+| **RNF10** | Feedback do Sistema | O sistema deve fornecer mensagens de aviso claras e objetivas em caso de erro, sucesso ou validação negada (ex: "Produto excluído com sucesso" ou "Acesso negado"). | Média | 
 ---
 
 ### 3.3 Regras de Negócio
@@ -161,6 +162,7 @@ O sistema utiliza um banco de dados relacional composto por 4 tabelas principais
 | *`id`* | SERIAL | PRIMARY KEY | Identificador único do produto. |
 | *`titulo`* | VARCHAR(150) | NOT NULL | Nome da obra. |
 | *`categoria`* | VARCHAR(50) | NOT NULL | Ex: Filme, Jogo, Mangá. |
+| *`imagem_capa`* | VARCHAR(255) | NULL | Caminho (URL relativa) da imagem salva no servidor (ex: uploads/capas/filme1.jpg). |
 | *`quantidade`* | INT | NOT NULL, DEFAULT 0 | Quantidade de cópias físicas em estoque (RF05). |
 | *`valor_diaria`* | DECIMAL(10,2) | NOT NULL | Valor base cobrado por dia de aluguel (RF15). |
 | *`disponivel`* | BOOLEAN | DEFAULT TRUE | `true` = Disponível, `false` = Indisponível (RF07, RN05). |
@@ -215,6 +217,7 @@ erDiagram
         varchar categoria "Filme, Jogo, etc"
         int quantidade "Default 0"
         decimal valor_diaria "Not Null"
+        varchar imagem_capa "Caminho do arquivo"
         boolean disponivel "Default True"
     }
 
@@ -340,6 +343,7 @@ classDiagram
         -String categoria
         -int quantidade
         -float valor_diaria
+        -String imagem_capa
         -boolean disponivel
         +cadastrarProduto() void
         +atualizarEstoque(quantidade) void
