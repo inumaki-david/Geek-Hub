@@ -1,6 +1,12 @@
 <?php
-    // Inclui a conexão com o db
-    require_once '../connect.php';
+    session_start();
+    require_once '../connect.php'; // Inclui a conexão com o bd
+
+    // RN04: Proteções de Segurança
+    if (!isset($_SESSION['usuario_id'])) {
+        header("Location: ../login.php");
+        exit;
+    }
 
     // Variável para mostrar mensagens de sucesso ou erro na tela
     $mensagem = "";
@@ -71,7 +77,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Produto - Geek Hub</title>
+    <title>Geek Hub - Cadastrar Produto</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -83,6 +89,8 @@
         button:hover { background-color: #218838; }
         .sucesso { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
         .erro { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; color: white; font-size: 14px; margin: 2px; display: inline-block; }
+        .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
     </style>
 </head>
 <body>
@@ -96,7 +104,7 @@
         
         <div class="form-group">
             <label for="titulo">Título da Obra *</label>
-            <input type="text" id="titulo" name="titulo" required>
+            <input type="text" id="titulo" name="titulo" placeholder="Ex: Star Wars II - O Ataque dos Clones / Jujutsu Kaisen V.04" required>
         </div>
 
         <div class="form-group">
@@ -127,7 +135,9 @@
 
         <button type="submit">Salvar Produto</button>
         
-        <a href="listar.php" class="btn-voltar">⬅️ Voltar para o Acervo</a>
+        <br><br>
+        <a href="listar.php" class="btn btn-voltar">⬅️ Voltar para o Acervo</a>
+        
     </form>
 </div>
 

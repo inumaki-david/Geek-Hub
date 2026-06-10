@@ -1,16 +1,16 @@
 <?php
-    // Inicia a sessão para verificar o crachá de acesso
+    // Inicia a sessão para verificar o acesso
     session_start();
 
-    // Se o usuário não tiver o crachá (não fez login), é expulso para a tela de login
+    // Se o usuário não tiver o crachá (não fez login), redireciona para a página de login
     if (!isset($_SESSION['usuario_id'])) {
         header("Location: login.php");
         exit;
     }
 
-    // Lógica para fazer Logout (Sair)
+    // Lógica para Logout 
     if (isset($_GET['sair'])) {
-        session_destroy(); // Rasga o crachá
+        session_destroy(); // Encerra a sessão
         header("Location: login.php");
         exit;
     }
@@ -20,7 +20,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel - Geek Hub</title>
+    <title>Geek Hub - Painel</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; }
         header { background-color: #2d3748; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -38,10 +38,13 @@
 
 <header>
     <div class="bem-vindo">
-        Geek Hub Dashboard | Olá, <?= htmlspecialchars($_SESSION['nome_usuario']) ?>! 
-        <span class="badge"><?= $_SESSION['perfil_acesso'] ?></span>
+        Geek Hub Painel | Olá, <?= htmlspecialchars($_SESSION['nome_usuario']) ?>! 
+        <?php 
+            $nome_perfil = ($_SESSION['perfil_acesso'] === 'Comum') ? 'Funcionário' : $_SESSION['perfil_acesso'];
+        ?>
+        <span class="badge"><?= htmlspecialchars($nome_perfil) ?></span>
     </div>
-    <a href="index.php?sair=true" class="btn-sair">Sair (Logout) 🚪</a>
+    <a href="index.php?sair=true" class="btn-sair">Logout</a>
 </header>
 
 <div class="container">
@@ -54,14 +57,22 @@
     <div class="card">
         <h3>Membros</h3>
         <p>Cadastre e gerencie os clientes da locadora.</p>
-        <a href="membros/cadastrar_membro.php" class="btn">Gerenciar Membros</a>
+        <a href="membros/listar_membros.php" class="btn">Gerenciar Membros</a>
     </div>
 
     <div class="card">
         <h3>Empréstimos</h3>
         <p>Realize aluguéis e controle as devoluções.</p>
-        <a href="#" class="btn" style="background-color: #a0aec0;">Em Breve</a>
+        <a href="emprestimos/listar_emprestimos.php" class="btn">Gerenciar Empréstimos</a>
     </div>
+
+    <?php if ($_SESSION['perfil_acesso'] === 'Gerente'): ?>
+        <div class="card" style="border-top: 5px solid #e53e3e;">
+            <h3>Usuários</h3>
+            <p>Gerencie os usuários, mude cargos e resete senhas.</p>
+            <a href="usuarios/listar_usuarios.php" class="btn" style="background-color: #e53e3e;">Controlar Acessos</a>
+        </div>
+    <?php endif; ?>
 </div>
 
 </body>

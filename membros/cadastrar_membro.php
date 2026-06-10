@@ -49,7 +49,8 @@
         input[type="text"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
         button:hover { background-color: #218838; }
-        .btn-voltar { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; }
+        .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; color: white; font-size: 14px; margin: 2px; display: inline-block; }
+        .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
         .sucesso { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
         .erro { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
     </style>
@@ -57,7 +58,7 @@
 <body>
 
 <div class="container">
-    <h2>Cadastrar Novo Cliente</h2>
+    <h2>Cadastrar Novo Membro</h2>
     
     <?= $mensagem ?>
 
@@ -69,16 +70,19 @@
 
         <div class="form-group">
             <label for="cpf">CPF *</label>
-            <input type="text" id="cpf" name="cpf" required placeholder="Apenas números">
+            <input type="text" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Digite um CPF válido no formato xxx.xxx.xxx-xx" placeholder="Ex: 00.000.000-00" required>
         </div>
 
         <div class="form-group">
-            <label for="telefone">Telefone</label>
-            <input type="text" id="telefone" name="telefone" placeholder="Ex: (11) 99999-9999">
+            <label for="telefone">Telefone *</label>
+            <input type="text" id="telefone" name="telefone" placeholder="Ex: (11) 99999-9999" pattern="\(\d{2}\) \d{5}-\d{4}" title="Digite um telefone válido no formato (xx) xxxxx-xxxx" required>
         </div>
 
-        <button type="submit">Salvar Cliente</button>
-        <a href="../index.php" class="btn-voltar">⬅️ Voltar para o Painel</a>
+        <button type="submit">Salvar Membro</button>
+
+        <br><br>
+        <a href="listar_membros.php" class="btn btn-voltar">⬅️ Voltar para os Membros</a>
+
     </form>
 </div>
 

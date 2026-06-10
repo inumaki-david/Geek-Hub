@@ -1,6 +1,12 @@
 <?php
-    // Inclui a conexão com o bd
-    require_once '../connect.php';
+    session_start();
+    require_once '../connect.php'; // Inclui a conexão com o bd
+
+    // RN04: Proteções de Segurança
+    if (!isset($_SESSION['usuario_id'])) {
+        header("Location: ../login.php");
+        exit;
+    }
 
     $mensagem = "";
     $produto = null;
@@ -96,7 +102,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Produto - Geek Hub</title>
+    <title>Geek Hub - Editar Produto</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }

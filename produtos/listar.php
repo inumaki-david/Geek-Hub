@@ -1,6 +1,6 @@
 <?php
-    // 1. Inclui a conexão com o bd
-    require_once '../connect.php';
+    session_start();
+    require_once '../connect.php'; // Inclui a conexão com o bd
 
     try {
         // Prepara a consulta SQL para buscar os produtos
@@ -25,7 +25,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acervo - Geek Hub</title>
+    <title>Geek Hub - Acervo de Produtos</title>
     <style>
         /* CSS para deixar a nossa tabela com aspeto de sistema profissional */
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
@@ -45,6 +45,7 @@
         .btn-editar { background-color: #007bff; }
         .btn-excluir { background-color: #dc3545; }
         .btn:hover { opacity: 0.8; }
+        .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
         
         /* Cores para o status */
         .status-on { color: #28a745; font-weight: bold; }
@@ -99,8 +100,12 @@
                         
                         <td>
                             <a href="editar.php?id=<?= $produto['id'] ?>" class="btn btn-editar">✏️ Editar</a>
-                            <a href="excluir.php?id=<?= $produto['id'] ?>" class="btn btn-excluir">🗑️ Excluir</a>
+                            
+                            <?php if ($_SESSION['perfil_acesso'] === 'Gerente'): ?>
+                                <a href="excluir.php?id=<?= $produto['id'] ?>" class="btn btn-excluir">🗑️ Excluir</a>
+                            <?php endif; ?>
                         </td>
+
                     </tr>
                 <?php endforeach; ?>
                 <?php else: ?>
@@ -110,6 +115,10 @@
             <?php endif; ?>
         </tbody>
     </table>
+    
+    <br>
+    <a href="../index.php" class="btn btn-voltar">⬅️ Voltar ao Painel</a>
+    
 </div>
 
 </body>

@@ -1,7 +1,6 @@
 <?php
-    // Inicia a sessão para realizar o login! Isso liga a memória do PHP para guardar o crachá de acesso.
-    session_start();
-    require_once 'connect.php';
+    session_start(); // Inicia a sessão para realizar o login
+    require_once 'connect.php'; // Inclui a conexão com o bd
 
     $erro = "";
 
@@ -41,7 +40,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Geek Hub</title>
+    <title>Geek Hub - Login</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #2d3748; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .login-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 100%; max-width: 350px; }
