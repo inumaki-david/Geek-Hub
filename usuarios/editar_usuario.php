@@ -49,28 +49,24 @@
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$usuario) die("Usuário não encontrado.");
     }
+
+    $base_path = "../";
+    require_once '../header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Geek Hub - Editar Usuário</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #007bff; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        .btn-voltar { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; }
-        .erro { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
-        .aviso { font-size: 12px; color: #666; font-style: italic; }
-    </style>
-</head>
+<style>
+    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #007bff; margin-top: 0;}
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
+    .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; color: white; font-size: 14px; margin: 2px; display: inline-block; }
+    .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
+    .erro { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+    .aviso { font-size: 12px; color: #666; font-style: italic; }
+</style>
 
-<body>
 <div class="container">
     <h2>Editar Usuário</h2>
     <?= $mensagem ?>
@@ -102,10 +98,13 @@
         </div>
 
         <button type="submit">Atualizar Dados</button>
-        <a href="listar_usuarios.php" class="btn-voltar">⬅️ Voltar para os Usuários</a>
+
+        <br><br>
+        <a href="listar_usuarios.php" class="btn btn-voltar">⬅️ Voltar para os Usuários</a>
 
     </form>
 </div>
 
-</body>
-</html>
+<?php 
+    require_once '../footer.php'; 
+?>

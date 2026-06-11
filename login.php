@@ -19,14 +19,18 @@
             // Se o usuário existir e a senha inserida bater com o Hash guardado no banco
             if ($usuario && password_verify($senha, $usuario['senha_hash'])) {
                 
-                // Cria o "crachá" de acesso na memória do servidor
-                $_SESSION['usuario_id'] = $usuario['id'];
-                $_SESSION['nome_usuario'] = $usuario['nome'];
-                $_SESSION['perfil_acesso'] = $usuario['perfil_acesso']; // "Gerente" ou "Comum"
-                
-                // Redireciona para o painel principal
-                header("Location: index.php");
-                exit;
+                if ($usuario['status_ativo'] == false) {
+                    $erro = "Acesso Bloqueado: Este usuário foi desativado pelo sistema.";
+                } else {
+                    // Cria o "crachá" de acesso na memória do servidor
+                    $_SESSION['usuario_id'] = $usuario['id'];
+                    $_SESSION['nome_usuario'] = $usuario['nome'];
+                    $_SESSION['perfil_acesso'] = $usuario['perfil_acesso'];
+                    
+                    // Redireciona para o painel principal
+                    header("Location: index.php");
+                    exit;
+                }
             } else {
                 $erro = "E-mail ou senha incorretos!";
             }
@@ -56,10 +60,6 @@
 
 <div class="login-box">
     <h2>Geek Hub Login</h2>
-    
-    <?php if ($erro): ?>
-        <div class="erro"><?= $erro ?></div>
-    <?php endif; ?>
 
     <form action="login.php" method="POST">
         <div class="form-group">
@@ -68,6 +68,11 @@
         <div class="form-group">
             <input type="password" name="senha" placeholder="Senha" required>
         </div>
+
+        <?php if ($erro): ?>
+            <div class="erro"><?= $erro ?></div>
+        <?php endif; ?>
+
         <button type="submit">Entrar no Sistema</button>
     </form>
 </div>

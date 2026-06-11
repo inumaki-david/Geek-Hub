@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    session_start(); // Inicia a sessão e inclui a conexão
     require_once '../connect.php'; // Inclui a conexão com o bd
 
     // RN04: Proteções de Segurança
@@ -115,39 +115,28 @@
     } catch (PDOException $e) {
         die("Erro: " . $e->getMessage());
     }
-?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Geek Hub - Excluir Produto</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; display: flex; justify-content: center; }
-        .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(220,53,69,0.2); text-align: center; max-width: 450px; border-top: 5px solid #dc3545; }
-        h2 { color: #dc3545; margin-top: 0; }
-        .titulo-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
-        .capa-filme { max-width: 120px; border-radius: 5px; margin-bottom: 15px; }
-        
-        .box-interativa { background-color: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 4px; margin-top: 15px; text-align: left; }
-        .box-interativa label { display: block; font-size: 14px; font-weight: bold; color: #333; margin-bottom: 8px; }
-        .box-interativa input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; }
-        
-        .box-senha { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; text-align: left;}
-        .box-senha label { color: #856404; display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
-        .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        
-        .botoes { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; }
-        .btn-cancelar { background-color: #6c757d; color: white; }
-        .btn-cancelar:hover { background-color: #5a6268; }
-        .btn-excluir { background-color: #dc3545; color: white; }
-        .btn-excluir:hover { background-color: #c82333; }
-        .erro-msg { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; }
-        .badge-estoque { display: inline-block; background: #3182ce; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; vertical-align: middle; margin-left: 5px;}
-    </style>
-</head>
-<body>
+    $base_path = "../";
+    require_once '../header.php';
+?>
+<style>
+    .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(220,53,69,0.2); text-align: center; max-width: 450px; border-top: 5px solid #dc3545; margin: 0 auto; }
+    h2 { color: #dc3545; margin-top: 0; }
+    .titulo-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
+    .box-interativa { background-color: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 4px; margin-top: 15px; text-align: left; }
+    .box-interativa label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    .box-interativa input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .box-senha { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; text-align: left; margin-top: 15px;}
+    .box-senha label { color: #856404; display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .botoes { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; text-align: center;}
+    .btn-cancelar { background-color: #6c757d; color: white; }
+    .btn-excluir { background-color: #dc3545; color: white; }
+    .erro-msg { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; }
+    .badge-estoque { display: inline-block; background: #3182ce; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; margin-left: 5px;}
+    .capa-filme { max-width: 120px; border-radius: 5px; margin-bottom: 15px; }
+</style>
 
 <div class="card-aviso">
     <h2>⚠️ Autenticação Obrigatória</h2>
@@ -156,12 +145,11 @@
     <?php if (!empty($produto['imagem_capa'])): ?>
         <img src="<?= htmlspecialchars($produto['imagem_capa']) ?>" alt="Capa" class="capa-filme">
     <?php endif; ?>
-
     <div class="titulo-destaque">"<?= htmlspecialchars($produto['titulo']) ?>"</div>
 
     <form action="excluir.php" method="POST">
         <input type="hidden" name="id" value="<?= $produto['id'] ?>">
-        
+
         <div class="box-interativa">
             <label for="qtd_remover">
                 Quantas unidades deseja remover do estoque? 
@@ -180,7 +168,7 @@
         <?php if ($erro): ?>
             <div class="erro-msg"><?= $erro ?></div>
         <?php endif; ?>
-        
+
         <div class="botoes">
             <a href="listar.php" class="btn btn-cancelar">Cancelar</a>
             <button type="submit" class="btn btn-excluir">Confirmar Ação</button>
@@ -188,5 +176,6 @@
     </form>
 </div>
 
-</body>
-</html>
+<?php 
+    require_once '../footer.php'; 
+?>

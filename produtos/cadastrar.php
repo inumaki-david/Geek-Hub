@@ -1,15 +1,14 @@
 <?php
-    session_start();
+    session_start(); // Inicia a sessão para verificar o acesso
     require_once '../connect.php'; // Inclui a conexão com o bd
 
-    // RN04: Proteções de Segurança
+    // Proteção de login
     if (!isset($_SESSION['usuario_id'])) {
         header("Location: ../login.php");
         exit;
     }
 
-    // Variável para mostrar mensagens de sucesso ou erro na tela
-    $mensagem = "";
+    $mensagem = ""; // Variável para mostrar mensagens de sucesso ou erro na tela
 
     // VERIFICA SE O FORMULÁRIO FOI ENVIADO
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -70,76 +69,67 @@
             }
         }
     }
+
+    $base_path = "../";
+    require_once '../header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geek Hub - Cadastrar Produto</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="number"], select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
-        button:hover { background-color: #218838; }
-        .sucesso { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
-        .erro { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
-        .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; color: white; font-size: 14px; margin: 2px; display: inline-block; }
-        .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
-    </style>
-</head>
-<body>
+<style>
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #3182ce; margin-top: 0; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"], input[type="number"], select, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background-color: #3182ce; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
+    button:hover { background-color: #2b6cb0; }
+    .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; color: white; font-size: 14px; margin: 2px; display: inline-block; }
+    .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
+    .sucesso { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+    .erro { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+</style>
 
 <div class="container">
-    <h2>Cadastrar Novo Item</h2>
-    
-    <?= $mensagem ?>
-
+    <h2>Cadastrar Novo Produto</h2>
     <form action="cadastrar.php" method="POST" enctype="multipart/form-data">
-        
         <div class="form-group">
-            <label for="titulo">Título da Obra *</label>
+            <label>Título da Obra *</label>
             <input type="text" id="titulo" name="titulo" placeholder="Ex: Star Wars II - O Ataque dos Clones / Jujutsu Kaisen V.04" required>
         </div>
 
         <div class="form-group">
-            <label for="categoria">Categoria *</label>
-            <select id="categoria" name="categoria" required>
+            <label>Categoria *</label>
+            <select name="categoria" required>
                 <option value="">Selecione uma opção</option>
-                <option value="Filme">Filme</option>
-                <option value="Jogo">Jogo</option>
+                <option value="Filme">Filme (DVD/Blu-ray)</option>
+                <option value="Jogo">Jogo (Mídia Física)</option>
                 <option value="Manga">Mangá / HQ</option>
                 <option value="Outro">Outro Produto Geek</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="quantidade">Quantidade em Estoque *</label>
-            <input type="number" id="quantidade" name="quantidade" min="0" value="1" required>
-        </div>
-
-        <div class="form-group">
-            <label for="valor_diaria">Valor da Diária (R$) *</label>
+            <label>Valor da Diária (R$) *</label>
             <input type="number" id="valor_diaria" name="valor_diaria" min="0.01" step="0.01" placeholder="Ex: 5.50" required>
         </div>
 
         <div class="form-group">
-            <label for="imagem_capa">Imagem da Capa (JPG, PNG)</label>
-            <input type="file" id="imagem_capa" name="imagem_capa" accept=".jpg, .jpeg, .png, .webp">
+            <label>Quantidade em Estoque *</label>
+            <input type="number" id="quantidade" name="quantidade" min="0" value="1" required>
         </div>
 
+        <div class="form-group">
+            <label>Imagem de Capa (JPG, PNG, WEBP)</label>
+            <input type="file" id="imagem_capa" name="imagem_capa" accept=".jpg, .jpeg, .png, .webp">
+        </div>
         <button type="submit">Salvar Produto</button>
-        
+
         <br><br>
+        <?= $mensagem ?>
+
         <a href="listar.php" class="btn btn-voltar">⬅️ Voltar para o Acervo</a>
-        
     </form>
 </div>
 
-</body>
-</html>
+<?php 
+    require_once '../footer.php'; 
+?>

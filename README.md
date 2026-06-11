@@ -1,4 +1,4 @@
-# Geek Hub - Sistema de Cadastro de Filmes e Usuários para uma Locadora
+# Geek Hub - Sistema de Gestão para uma Locadora
 
 O **Geek Hub** é uma aplicação web desenvolvida em PHP com foco no gerenciamento de uma locadora de filmes, jogos, mangás e produtos do universo geek. O sistema foi criado com o objetivo de facilitar e padronizar o processo de cadastro e controle dos itens disponíveis para aluguel/empréstimo, oferecendo uma interface simples, organizada e eficiente para os funcionários da locadora.
 
@@ -213,7 +213,7 @@ erDiagram
     %% Tabela de Produtos (Acervo)
     PRODUTOS {
         int id PK "Identificador único"
-        varchar titulo "Not Null"
+        varchar titulo "Not Null" 
         varchar categoria "Filme, Jogo, etc"
         int quantidade "Default 0"
         decimal valor_diaria "Not Null"

@@ -4,7 +4,8 @@ CREATE TABLE usuarios (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
-    perfil_acesso VARCHAR(20) NOT NULL CHECK (perfil_acesso IN ('Gerente', 'Comum'))
+    perfil_acesso VARCHAR(20) NOT NULL CHECK (perfil_acesso IN ('Gerente', 'Comum')),
+    status_ativo BOOLEAN DEFAULT TRUE
 );
 
 -- 2. Criação da Tabela de Membros (Clientes)

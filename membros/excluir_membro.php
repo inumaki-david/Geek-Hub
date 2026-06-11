@@ -1,6 +1,6 @@
 <?php
-    session_start();
-    require_once '../connect.php';
+    session_start(); // Inicia a sessão para verificar o acesso
+    require_once '../connect.php'; // Inclui a conexão com o bd
 
     // RN04: Proteções de Segurança
     if (!isset($_SESSION['usuario_id'])) {
@@ -74,29 +74,24 @@
     } catch (PDOException $e) {
         die("Erro: " . $e->getMessage());
     }
+
+    $base_path = "../";
+    require_once '../header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Geek Hub - Excluir Membro</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
-        .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(220,53,69,0.2); text-align: center; max-width: 400px; border-top: 5px solid #dc3545; }
-        h2 { color: #dc3545; margin-top: 0; }
-        .nome-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
-        .box-senha { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: left;}
-        .box-senha label { display: block; font-size: 14px; font-weight: bold; color: #856404; margin-bottom: 8px; }
-        .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .botoes { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; text-align: center;}
-        .btn-cancelar { background-color: #6c757d; color: white; }
-        .btn-excluir { background-color: #dc3545; color: white; }
-        .box-erro { color: #721c24; background-color: #f8d7da; padding: 15px; border-radius: 4px; margin-bottom: 20px; max-width: 400px; text-align: center; font-weight: bold; border: 1px solid #f5c6cb; }
-    </style>
-</head>
-<body>
+<style>
+    .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(220,53,69,0.2); text-align: center; max-width: 400px; border-top: 5px solid #dc3545; margin: 0 auto;}
+    h2 { color: #dc3545; margin-top: 0; }
+    .nome-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
+    .box-senha { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: left;}
+    .box-senha label { display: block; font-size: 14px; font-weight: bold; color: #856404; margin-bottom: 8px; }
+    .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .botoes { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; text-align: center;}
+    .btn-cancelar { background-color: #6c757d; color: white; }
+    .btn-excluir { background-color: #dc3545; color: white; }
+    .box-erro { color: #721c24; background-color: #f8d7da; padding: 15px; border-radius: 4px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+</style>
 
 <div class="card-aviso">
     <h2>⚠️ Excluir Membro ?</h2>
@@ -143,5 +138,6 @@
         
 </div>
 
-</body>
-</html>
+<?php 
+    require_once '../footer.php'; 
+?>
