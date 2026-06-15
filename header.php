@@ -56,6 +56,18 @@ $base = isset($base_path) ? $base_path : '';
         .nav-brand a { color: #63b3ed; text-decoration: none; }
         .nav-user { font-size: 13px; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 12px; }
         .btn-sair { color: #fc8181 !important; }
+
+        /* ESTILOS DA LOGO */
+        .logo-img {
+            height: 66px; 
+            width: auto;  
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            padding: 1px; 
+        }
+        .logo-img:hover {
+            transform: scale(1.05); 
+        }
         
         /* BOTÃO DE TEMA */
         .btn-tema { background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.3s;}
@@ -63,6 +75,32 @@ $base = isset($base_path) ? $base_path : '';
 
         .main-content { padding: 30px 20px; min-height: 80vh; }
 
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: row; 
+                gap: 8px; /* Cria um espaço entre a logo e os links */
+                padding: 15px 10px;
+            }
+            .navbar-links {
+                flex-wrap: wrap; /* Permite que os botões quebrem a linha se faltar espaço */
+                justify-content: center; /* Centraliza os botões */
+                width: 100%;
+                gap: 8px;
+            }
+            .nav-user {
+                width: 100%; /* Faz a tag do nome do funcionário ocupar a linha inteira */
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .logo-img {
+                height: 66px; /* Diminui um pouco a logo no celular para poupar espaço */
+            }
+            .main-content { 
+                padding: 15px 10px; /* Diminui as margens laterais do corpo da página */
+            }
+        }
+
+        /* OVERRIDE PARA DARK MODE */
         [data-theme="dark"] .container, 
         [data-theme="dark"] .card, 
         [data-theme="dark"] .recibo-card, 
@@ -72,18 +110,15 @@ $base = isset($base_path) ? $base_path : '';
             box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
         }
         
-        /* Ajuste de Títulos e Textos no Dark Mode */
         [data-theme="dark"] .container h2, 
         [data-theme="dark"] .card h3,
         [data-theme="dark"] .recibo-card h2 { color: #63b3ed !important; }
         [data-theme="dark"] .card-aviso h2 { color: #fc8181 !important; }
         [data-theme="dark"] label, [data-theme="dark"] .linha span, [data-theme="dark"] .destaque, [data-theme="dark"] .nome-destaque { color: var(--text-global) !important; }
 
-        /* Ajuste de Tabelas no Dark Mode */
         [data-theme="dark"] table th { background-color: var(--nav-bg) !important; border-color: var(--border-color) !important; }
         [data-theme="dark"] table td { border-color: var(--border-color) !important; color: var(--text-global) !important; }
         
-        /* Ajuste de Formulários e Inputs no Dark Mode */
         [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea { 
             background-color: var(--bg-input) !important; 
             color: var(--text-global) !important; 
@@ -96,12 +131,10 @@ $base = isset($base_path) ? $base_path : '';
             color: var(--text-global) !important;
         }
 
-        /* Ajuste das Caixas de Aviso (Sucesso, Info e Erro) no Dark Mode */
         [data-theme="dark"] .info-box { background-color: #2a4365 !important; border-color: #3182ce !important; color: #bee3f8 !important; }
         [data-theme="dark"] .box-previsao, [data-theme="dark"] .sucesso { background-color: #22543d !important; border-color: #2f855a !important; color: #c6f6d5 !important; }
         [data-theme="dark"] .erro, [data-theme="dark"] .box-erro, [data-theme="dark"] .alerta-bloqueio { background-color: #742a2a !important; border-color: #9b2c2c !important; color: #fed7d7 !important; }
         
-        /* Ajuste do Select2 no Dark Mode */
         [data-theme="dark"] .select2-container--default .select2-selection--single { background-color: var(--bg-input) !important; border-color: var(--border-color) !important; }
         [data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--text-global) !important; }
         [data-theme="dark"] .select2-dropdown { background-color: var(--bg-card) !important; border-color: var(--border-color) !important; }
@@ -114,7 +147,9 @@ $base = isset($base_path) ? $base_path : '';
 
 <div class="navbar">
     <div class="nav-brand">
-        <a href="<?= $base ?>index.php" style="color: #63b3ed; text-decoration: none;">🎬 Geek Hub</a>
+        <a href="<?= $base ?>index.php" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="<?= $base ?>assets/logo.svg" alt="Geek Hub Logo" class="logo-img">
+        </a>
     </div>
     
     <?php if(isset($_SESSION['usuario_id'])): ?>

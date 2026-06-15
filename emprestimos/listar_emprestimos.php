@@ -8,7 +8,7 @@
         exit;
     }
 
-    // Gatilho: Inativa membros inadimplentes automaticamente
+    // Inativa membros inadimplentes automaticamente
     try {
         $pdo->exec("UPDATE membros SET status_ativo = false WHERE id IN (SELECT membro_id FROM emprestimos WHERE status != 'Concluído' AND data_fim_prevista < CURRENT_DATE)");
     } catch (PDOException $e) {}
@@ -57,7 +57,7 @@
             $sql .= " AND m.status_ativo = false";
         }
 
-        // 3. Aplica a lógica de ORDENAÇÃO dinâmica
+        // Aplica a lógica de ORDENAÇÃO dinâmica
         if ($ordenacao === 'recente') {
             $sql .= " ORDER BY e.data_inicio DESC";
         } elseif ($ordenacao === 'alfabetica_cliente') {
@@ -70,7 +70,7 @@
                 
         $stmt = $pdo->prepare($sql);
 
-        // 4. Binds dos parâmetros
+        // Binds dos parâmetros
         if (!empty($busca)) {
             $termo = "%$busca%";
             $stmt->bindParam(':busca', $termo);
@@ -144,10 +144,10 @@
             <label for="categoria">Categoria do Produto:</label>
             <select id="categoria" name="categoria">
                 <option value="">Todas as Categorias</option>
-                <option value="Filme" <?= $categoria == 'Filme' ? 'selected' : '' ?>>🎬 Filme (DVD/Blu-ray)</option>
-                <option value="Jogo" <?= $categoria == 'Jogo' ? 'selected' : '' ?>>🎮 Jogo (Mídia Física)</option>
-                <option value="Manga" <?= $categoria == 'Manga' ? 'selected' : '' ?>>📖 Mangá / HQ</option>
-                <option value="Outro" <?= $categoria == 'Outro' ? 'selected' : '' ?>>📦 Outros Produtos Geek</option>
+                <option value="Filme" <?= $categoria == 'Filme' ? 'selected' : '' ?>>Filme (DVD/Blu-ray)</option>
+                <option value="Jogo" <?= $categoria == 'Jogo' ? 'selected' : '' ?>>Jogo (Mídia Física)</option>
+                <option value="Manga" <?= $categoria == 'Manga' ? 'selected' : '' ?>>Mangá / HQ</option>
+                <option value="Outro" <?= $categoria == 'Outro' ? 'selected' : '' ?>>Outros Produtos Geek</option>
             </select>
         </div>
 
@@ -164,7 +164,7 @@
         <div class="filtro-grupo">
             <label for="ordenacao">Ordenar por:</label>
             <select id="ordenacao" name="ordenacao">
-                <option value="padrao" <?= $ordenacao == 'padrao' ? 'selected' : '' ?>>🚨Prioridade (Prazos)</option>
+                <option value="padrao" <?= $ordenacao == 'padrao' ? 'selected' : '' ?>>🔄 Padrão</option>
                 <option value="recente" <?= $ordenacao == 'recente' ? 'selected' : '' ?>>📅Mais Recentes (Saída)</option>
                 <option value="alfabetica_cliente" <?= $ordenacao == 'alfabetica_cliente' ? 'selected' : '' ?>>👤A-Z (Nome do Cliente)</option>
                 <option value="alfabetica_produto" <?= $ordenacao == 'alfabetica_produto' ? 'selected' : '' ?>>📦A-Z (Título do Produto)</option>
@@ -183,7 +183,8 @@
                 <th>Cód</th>
                 <th>Cliente</th>
                 <th>Produto</th>
-                <th>Categoria</th> <th>Data Saída</th>
+                <th>Categoria</th> 
+                <th>Data Saída</th>
                 <th>Prazo</th>
                 <th>Funcionário</th>
                 <th>Status</th>
@@ -204,6 +205,16 @@
                                 $classe_status = 'status-atrasado';
                             }
                         }
+
+                        // NOVA LÓGICA DE MAPEAR A CATEGORIA
+                        $mapa_categorias = [
+                            'Manga' => 'Mangá / HQ',
+                            'Filme' => 'Filme (DVD/Blu-ray)',
+                            'Jogo'  => 'Jogo (Mídia Física)',
+                            'Outro' => 'Outro Produto Geek'
+                        ];
+                        $cat_slug = $emp['produto_categoria'];
+                        $nome_categoria = array_key_exists($cat_slug, $mapa_categorias) ? $mapa_categorias[$cat_slug] : $cat_slug;
                     ?>
                     <tr>
                         <td>#<?= $emp['id'] ?></td>
@@ -218,7 +229,7 @@
                             <strong><?= htmlspecialchars($emp['produto_titulo']) ?></strong>
                         </td>
                         <td>
-                            <span><?= htmlspecialchars($emp['produto_categoria']) ?></span>
+                            <span><?= htmlspecialchars($nome_categoria) ?></span>
                         </td>
                         <td><?= date('d/m/Y', strtotime($emp['data_inicio'])) ?></td>
                         <td><?= date('d/m/Y', strtotime($emp['data_fim_prevista'])) ?></td>

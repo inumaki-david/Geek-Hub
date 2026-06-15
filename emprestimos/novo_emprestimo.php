@@ -91,7 +91,7 @@
     .btn-voltar { background-color: #6c757d; font-weight: bold; padding: 10px 15px; margin-bottom: 15px; margin-right: 10px;}
     .sucesso { color: #155724; background-color: #d4edda; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-weight: bold;}
     .erro { color: #721c24; background-color: #f8d7da; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-weight: bold;}
-    .info-box { background-color: #ebf8ff; padding: 10px; border-left: 4px solid #3182ce; font-size: 13px; color: #2b6cb0; margin-bottom: 15px; }
+    .info-box { background-color: #ebf8ff; padding: 10px; border-left: 4px solid #3182ce; font-size: 13px; color: #2b6cb0; margin-bottom: 15px; border-radius: 5px; }
     .box-previsao { display: none; background-color: #e6ffed; border: 3px solid #c3e6cb; padding: 12px; border-radius: 16px; margin-bottom: 20px; text-align: center; color: #155724; }
     .box-previsao .valor-total { font-size: 24px; font-weight: bold; margin-top: 5px; }
     
@@ -111,9 +111,9 @@
 
     <form action="novo_emprestimo.php" method="POST">
         <div class="form-group">
-            <label>Cliente (Pesquise por Nome ou CPF) *</label>
+            <label>Membro (Pesquise por Nome) *</label>
             <select id="membro_id" name="membro_id" class="select-pesquisa" style="width: 100%;" required>
-                <option value="">Pesquise ou Selecione o Cliente</option>
+                <option value="">Pesquise ou Selecione o Membro</option>
                 <?php foreach ($membros as $membro): ?>
                     <option value="<?= $membro['id'] ?>"><?= htmlspecialchars($membro['nome']) ?></option>
                 <?php endforeach; ?>
