@@ -6,6 +6,86 @@ A plataforma permite realizar operações essenciais de gerenciamento, como cada
 
 ---
 
+## Como Executar o Projeto Localmente
+
+Para rodar este projeto na sua máquina, será necessário ter instalado um ambiente de servidor local (**PHP**) e o banco de dados **PostgreSQL**.
+
+### Pré-Requisitos 
+* **PHP** (v7.4 ou superior) habilitado com a extensão `pdo_pgsql`.
+* **PostgreSQL** instalado e a rodar na porta `5432` (padrão).
+* **Git** instalado na máquina.
+
+### Passo 1: Clonar o Repositório
+
+Abra o terminal e execute:
+```
+# Clone este repositório
+git clone [https://github.com/inumaki-david/Geek-Hub]
+
+# Acesse a pasta do projeto
+cd geek-hub
+```
+
+### Passo 2: Configurar o Banco de Dados (Restore do Dump)
+
+O projeto já conta com um ficheiro de dump (.sql) com toda a estrutura das tabelas (e possivelmente dados iniciais) localizada na pasta /db/. Siga os passos abaixo para recriar o banco no seu PostgreSQL:
+
+* 1 - Abra o terminal (Prompt de Comando ou PowerShell).
+
+* 2 - Conecte-se ao PostgreSQL usando o seu usuário principal (geralmente `postgres`): 
+```
+psql -U postgres
+```
+* 3 - Se o banco de dados já existir de testes anteriores, apague-o e crie um novo para evitar conflitos de tabelas. Dentro do terminal interativo do `psql`, digite:
+```
+DROP DATABASE IF EXISTS [nome_bd];
+CREATE DATABASE [nome_bd];
+\q
+```
+* 4 - Navegue para a pasta `db` do projeto clonado e restaure o banco de dados executando o seguinte comando:
+```
+# Supondo que você esteja na raiz do projeto clonado
+cd db
+
+# Restaura o banco de dados
+psql -U postgres -d geekhub_db -f dump_geekhub.sql
+
+# Volte para a raiz do projeto
+cd ..
+```
+
+### Passo 3: Configurar a Conexão no PHP
+
+* 1 - Na raiz do projeto, abra o ficheiro `connect.php`.
+
+* 2 - Altere as credenciais para corresponderem às do seu ambiente local PostgreSQL:
+```
+$host = 'localhost';
+$port = '5432';
+$dbname = '[nome_bd]'; // O mesmo nome que criou no Passo 2
+$user = 'postgres'; // O seu usuário do PostgreSQL
+$password = 'sua_senha_aqui'; // A sua senha do PostgreSQL
+```
+
+### Passo 4: Acessar a Aplicação
+
+Com o banco de dados configurado, inicie o servidor embutido do PHP.
+Certifique-se de que o seu terminal está na raiz do projeto e execute:
+```
+php -S 0.0.0.0:3007
+```
+O servidor estará ativo! Agora, basta abrir o seu navegador de preferência e acessar:
+```
+http://localhost:3007
+```
+
+### Informações de Entrada
+
+**E-mail**: `teste@geekhub.com`
+**Senha**: `12345`
+
+---
+
 ## Especificação de Requisitos de Software
 Especificação dos Requisistos de Software (SRE)  
 Estrutura Baseada na ISO/IEC/IEEE 29148:2018
@@ -41,6 +121,9 @@ O sistema deve realizar as seguintes funções principais:
 * Alterar o estado do membro, se está ativo ou não (se possuí algum empréstimo ou não).
 * Consultar todos os membros cadastrados.
 * Deletar membros com sistema de verificação.
+* Bloquear e Reativar o acesso de funcionários ao sistema.
+* Registar automaticamente um log de auditoria para ações críticas (cadastro, edição, exclusão e empréstimos).
+* Consultar painel de auditoria de logs (exclusivo para Gerentes).
 
 #### 2.2 Características do Usuários
 | Usuário | Descrição |
@@ -87,6 +170,13 @@ O sistema deve realizar as seguintes funções principais:
 | **RF16** | Registro de Devolução | O sistema deve possuir uma tela ou botão para registrar a "Devolução", capturando a *data_devolucao_real*. | Média |
 | **RF17** | Cálculo Automático de Multa e Total | No momento da devolução, o sistema deve calcular o valor total a ser pago (Dias alugados $\times$ Valor da diária) e somar uma multa caso a *data_devolucao_real* seja maior que a *data_fim_prevista*. | Média |
 ---
+#### Módulo de Auditoria e Gestão de Usuários
+| ID | Título | Descrição | Prioridade |
+| :--- | :--- | :--- | :--- |
+| **RF18** | Rastreio de Ações (Logs) | O sistema deve gravar automaticamente um log com a ação, descrição (com nomes), data/hora e o autor de qualquer operação de escrita (CRUD) no banco. | Alta |
+| **RF19** | Painel de Auditoria | O sistema deve fornecer um painel exclusivo para o Gerente consultar e filtrar (por data, usuário ou palavra-chave) os logs de ações do sistema. | Alta |
+| **RF20** | Bloqueio de Usuários | O sistema deve permitir que um Gerente inative/bloqueie o acesso de outros funcionários sem excluí-los do banco de dados. | Alta |
+---
 
 ### 3.2 Requisitos Não Funcionais
 
@@ -110,7 +200,8 @@ O sistema deve realizar as seguintes funções principais:
 | **RNF07** | Interface Intuitiva | A interface gráfica (HTML/CSS) deve ser simples, limpa e padronizada, garantindo que os funcionários consigam operar o sistema (cadastros e empréstimos) com o mínimo de treinamento prévio. | Média |
 | **RNF08** | Processamento Seguro de Imagens | O upload de capas de produtos deve restringir rigorosamente os formatos de arquivo permitidos (ex: JPG, PNG, WEBP) e limitar o tamanho máximo de envio (ex: 2MB) via PHP, renomeando o arquivo com um hash único antes de salvá-lo no diretório físico do servidor para evitar conflitos e execução de scripts maliciosos. | Alta |
 | **RNF09** | Responsividade Básica | O layout das telas principais deve adaptar-se de forma razoável a diferentes tamanhos de tela (como monitores de balcão e tablets), facilitando o uso pelos funcionários enquanto verificam o acervo nas prateleiras. | Baixa |
-| **RNF10** | Feedback do Sistema | O sistema deve fornecer mensagens de aviso claras e objetivas em caso de erro, sucesso ou validação negada (ex: "Produto excluído com sucesso" ou "Acesso negado"). | Média | 
+| **RNF10** | Feedback do Sistema | O sistema deve fornecer mensagens de aviso claras e objetivas em caso de erro, sucesso ou validação negada (ex: "Produto excluído com sucesso" ou "Acesso negado"). | Média |
+| **RNF11** | Design System Global | O sistema deve utilizar uma padronização visual global baseada no "Ubuntu Dynamic Dark", aplicando variáveis CSS de cores tonais para conforto visual. | Alta | 
 ---
 
 ### 3.3 Regras de Negócio
@@ -122,18 +213,22 @@ O sistema deve realizar as seguintes funções principais:
 | **RN02** | Restrição de Exclusão de Membros | Um membro (cliente) não pode ser excluído do sistema se possuir empréstimos em andamento ou multas não pagas. | 
 | **RN03** | Status Automático do Membro | O status de um membro deve refletir a sua situação atual: se possui um empréstimo não devolvido ou em atraso, a sua conta deve indicar isso, podendo restringir novos aluguéis. | 
 | **RN04** | Exclusividade de Privilégios | Apenas contas com o nível de acesso "Gerente (Adm)" podem acessar as rotas (URLs) e botões de exclusão. Se um "Funcionário Comum" tentar acessar, o sistema deve redirecioná-lo e bloquear a ação. | 
+| **RN05** | Proteção de Auto-Bloqueio | Um gerente não pode alterar o status do seu próprio perfil (bloquear-se) através da tela de gerenciamento de usuários. | 
+| **RN06** | Preservação de Histórico (Soft Delete) | Caso um produto não possa ser apagado fisicamente (devido à RN01), o sistema deve oferecer a alternativa de apenas zerar o estoque e torná-lo indisponível automaticamente. | 
+| **RN07** | Inativação Automática | Clientes com empréstimos atrasados devem ser inativados automaticamente pelo sistema ao iniciar as listagens. | 
 ---
-#### Módulo de Operações de Empréstimo
+#### Módulo de Operações de Empréstimo e Auditoria
 | ID | Título | Regra / Condição de Execução |
 | :--- | :--- | :--- | 
-| **RN05** | Bloqueio de Título Indisponível | O sistema não pode permitir a abertura de um empréstimo para um título cujo status seja "Indisponível" ou cuja quantidade em estoque seja zero. |
-| **RN06** | Congelamento do Valor da Diária | O valor da diária registrado no momento do empréstimo não pode ser alterado retroativamente, mesmo que o gerente atualize o preço do produto no catálogo durante o período do aluguel. | 
-| **RN07** | Aplicação de Multa por Atraso | A multa só deve ser aplicada se a *data_devolucao_real* for estritamente maior que a *data_fim_prevista*. O cálculo final deve ser: (Dias Previstos $\times$ Diária) + (Dias de Atraso $\times$ Diária) + Taxa Fixa de Multa. |
-| **RN08** | Autenticação Dupla para Deletes | Para efetivar a exclusão de qualquer registro (membro ou produto), não basta estar logado como Gerente; o sistema deve exigir a digitação da senha novamente na tela de exclusão. | 
+| **RN08** | Bloqueio de Título Indisponível | O sistema não pode permitir a abertura de um empréstimo para um título cujo status seja "Indisponível" ou cuja quantidade em estoque seja zero. |
+| **RN09** | Congelamento do Valor da Diária | O valor da diária registrado no momento do empréstimo não pode ser alterado retroativamente, mesmo que o gerente atualize o preço do produto no catálogo durante o período do aluguel. | 
+| **RN10** | Aplicação de Multa por Atraso | A multa só deve ser aplicada se a *data_devolucao_real* for estritamente maior que a *data_fim_prevista*. O cálculo final deve ser: (Dias Previstos $\times$ Diária) + (Dias de Atraso $\times$ Diária) + Taxa Fixa de Multa. |
+| **RN11** | Autenticação Dupla para Deletes | Para efetivar a exclusão de qualquer registro (membro ou produto), não basta estar logado como Gerente; o sistema deve exigir a digitação da senha novamente na tela de exclusão. | 
+| **RN12** | Integridade da Auditoria | Se um usuário for excluído, os seus rastros de auditoria devem permanecer no banco (ON DELETE SET NULL) para garantir rastreabilidade vitalícia. | 
 ---
 
 ### 4. Estruturação do Banco de Dados 
-O sistema utiliza um banco de dados relacional composto por 4 tabelas principais. As relações garantem a integridade referencial exigida pelas Regras de Negócio.
+O sistema utiliza um banco de dados relacional composto por 5 tabelas principais. As relações garantem a integridade referencial exigida pelas Regras de Negócio.
 
 #### ENTIDADE: *`usuarios`* (Funcionários e Gerentes)
 *Armazena as credenciais de acesso do sistema.*
@@ -144,6 +239,7 @@ O sistema utiliza um banco de dados relacional composto por 4 tabelas principais
 | *`email`* | VARCHAR(100) | UNIQUE, NOT NULL | E-mail usado para o login. | 
 | *`senha_hash`* | VARCHAR(255) | NOT NULL | Senha criptografada (RNF05). |
 | *`perfil_acesso`* | VARCHAR(20) | NOT NULL | Define se é 'Gerente' ou 'Funcionario' (RF01, RN04). |
+| *`status_ativos`* | BOOLEAN | DEFAULT TRUE | Define se o funcionário tem permissão de login no sistema. |
 ---
 #### ENTIDADE: *`membros`* (Clientes da Locadora)
 *Armazena os dados dos clientes que realizam os empréstimos.*
@@ -181,7 +277,15 @@ O sistema utiliza um banco de dados relacional composto por 4 tabelas principais
 | *`valor_diaria_cobrado`* | DECIMAL(10,2) | NOT NULL | Preço da diária congelado no momento da saída (RN06). | 
 | *`multa_aplicada`* | DECIMAL(10,2) | DEFAULT 0.00 | Valor da multa caso haja atraso na entrega (RF17). |
 | *`status`* | VARCHAR(20) | DEFAULT 'Pendente' | Situação: 'Pendente', 'Concluído', 'Atrasado'. |
-
+---
+#### ENTIDADE: *`logsAuditoria`* (Trilha de Rastreio)
+*Entidade responsável por rastrear todas as ações sensíveis realizadas no sistema.*
+| Campo | Tipo | Restrições | Descrição |
+| :--- | :--- | :--- | :--- |
+| *`id`* | SERIAL | PRIMARY KEY | Identificador único do log. |
+| *`usuario_id`* | INT | FK, ON DELETE SET NULL | Usuário que executou a ação. Permite NULL caso o usuário seja excluído (RN12). |
+| *`acao`* | VARCHAR(100) | NOT NULL | Tipo da ação (Ex: Novo Empréstimo, Exclusão). |
+| *`descricao`* | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Momento exato em que a ação ocorreu. |
 ---
 
 ## 5. Diagramas 
@@ -235,10 +339,20 @@ erDiagram
         varchar status "Pendente, Concluído, Atrasado"
     }
 
+    %% Tabela de Logs (Auditoria)
+    LOGSAUDITORIA {
+        int id PK "Identificador único"
+        int usuario_id FK "ON DELETE SET NULL"
+        varchar acao "Not Null"
+        text descricao "Not Null"
+        timestamp data_hora "Default Current"
+    }
+
     %% Relações (Cardinalidade)
     USUARIOS ||--o{ EMPRESTIMOS : "registra"
     MEMBROS ||--o{ EMPRESTIMOS : "realiza"
     PRODUTOS ||--o{ EMPRESTIMOS : "esta_incluso_em"
+    USUARIOS ||--o{ LOGSAUDITORIA : "gera_rastro"
 
 ```
 ---
@@ -263,7 +377,7 @@ flowchart LR
         UC02(["Cadastrar Produto"])
         UC03(["Consultar Produto/Acervo"])
         UC04(["Alterar Status do Produto"])
-        UC05(["Excluir Produto"])
+        UC05(["Excluir Produto / Baixa Estoque"])
         
         %% Casos de Uso - Membros
         UC06(["Cadastrar Membro"])
@@ -275,8 +389,10 @@ flowchart LR
         UC10(["Registrar Empréstimo"])
         UC11(["Registrar Devolução e Multas"])
         
-        %% Casos de Uso - Segurança / Regras
+        %% Casos de Uso - Segurança / Auditoria
         UC12(["Confirmar Senha Adm (Dupla Autenticação)"])
+        UC13(["Consultar Relatório de Auditoria"])
+        UC14(["Bloquear/Reativar Acesso de Usuário"])
     end
 
     %% Associações do Funcionário
@@ -294,10 +410,13 @@ flowchart LR
     Gerente -->|Herda todos os acessos do Funcionário| Funcionario
     Gerente --- UC05
     Gerente --- UC09
+    Gerente --- UC13
+    Gerente --- UC14
 
     %% Relacionamentos de Inclusão (Regras de Negócio)
     UC05 -. "<<include>>\n(Obrigatório)" .-> UC12
     UC09 -. "<<include>>\n(Obrigatório)" .-> UC12
+    UC14 -. "<<include>>\n(Obrigatório)" .-> UC12
 ```
 ---
 ### 5.3 Diagrama de Classes
@@ -310,6 +429,7 @@ classDiagram
     Usuario "1" -- "*" Emprestimo : registra >
     Membro "1" -- "*" Emprestimo : realiza >
     Produto "1" -- "*" Emprestimo : é_alvo_de >
+    Usuario "1" -- "*" LogAuditoria : gera >
 
     %% Classe Usuario
     class Usuario {
@@ -318,9 +438,11 @@ classDiagram
         -String email
         -String senha_hash
         -String perfil_acesso
+        -boolean status_ativo
         +autenticar(email, senha) bool
         +cadastrarUsuario() void
         +exigirSenhaAdm(senha) bool
+        +alterarStatusAcesso() void
     }
 
     %% Classe Membro
@@ -351,7 +473,7 @@ classDiagram
         +excluirProduto() void
     }
 
-    %% Classe Emprestimo (Classe Associativa/Transacional)
+    %% Classe Emprestimo 
     class Emprestimo {
         -int id
         -int produto_id
@@ -367,6 +489,16 @@ classDiagram
         +registrarDevolucao() void
         +calcularMulta(diasAtraso) float
         +calcularTotal() float
+    }
+
+    %% Classe LogAuditoria
+    class LogAuditoria {
+        -int id
+        -int usuario_id
+        -String acao
+        -String descricao
+        -DateTime data_hora
+        +registrarLog(usuario, acao, descricao) void
     }
 
 ```
@@ -391,7 +523,8 @@ flowchart TD
     %% Efetivação do Empréstimo
     F --> G[Congelar Valor da Diária RN06]:::process
     G --> H[Atualizar Produto para Indisponível]:::process
-    H --> I([Fim: Produto Entregue ao Cliente]):::startEnd
+    H --> TR[Gerar Log de Auditoria na Saída]:::process
+    TR --> I([Fim: Produto Entregue ao Cliente]):::startEnd
 
     %% Linha do tempo imaginária para devolução
     I -. "Dias depois..." .-> J([Início: Processo de Devolução]):::startEnd
@@ -406,8 +539,9 @@ flowchart TD
     M --> N
     
     N --> O[Atualizar Produto para Disponível]:::process
-    O --> P([Fim: Devolução Concluída]):::startEnd
+    O --> TR2[Gerar Log de Auditoria da Devolução]:::process
+    TR2 --> P([Fim: Devolução Concluída]):::startEnd
 
 ```
-
 ---
+
