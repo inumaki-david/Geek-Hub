@@ -20,7 +20,7 @@ Para rodar este projeto na sua máquina, será necessário ter instalado um ambi
 Abra o terminal e execute:
 ```
 # Clone este repositório
-git clone [https://github.com/inumaki-david/Geek-Hub]
+git clone https://github.com/inumaki-david/Geek-Hub.git
 
 # Acesse a pasta do projeto
 cd geek-hub
@@ -38,8 +38,8 @@ psql -U postgres
 ```
 * 3 - Se o banco de dados já existir de testes anteriores, apague-o e crie um novo para evitar conflitos de tabelas. Dentro do terminal interativo do `psql`, digite:
 ```
-DROP DATABASE IF EXISTS [nome_bd];
-CREATE DATABASE [nome_bd];
+DROP DATABASE IF EXISTS [geekhub_db];
+CREATE DATABASE [geekhub_db];
 \q
 ```
 * 4 - Navegue para a pasta `db` do projeto clonado e restaure o banco de dados executando o seguinte comando:
