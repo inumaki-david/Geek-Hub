@@ -79,9 +79,10 @@ O servidor estará ativo! Agora, basta abrir o seu navegador de preferência e a
 http://localhost:3007
 ```
 
-### Informações de Entrada
+### Passo 5: Informações de Entrada
+Utilize essas informações para entrar no sistema.
 
-**E-mail**: `teste@geekhub.com`
+**E-mail**: `teste@geekhub.com` 
 **Senha**: `12345`
 
 ---
