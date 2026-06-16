@@ -353,7 +353,7 @@ erDiagram
     USUARIOS ||--o{ EMPRESTIMOS : "registra"
     MEMBROS ||--o{ EMPRESTIMOS : "realiza"
     PRODUTOS ||--o{ EMPRESTIMOS : "esta_incluso_em"
-    USUARIOS ||--o{ LOGSAUDITORIA : "gera_rastro"
+    USUARIOS ||--o{ LOGSAUDITORIA : "gera_logs"
 
 ```
 ---
