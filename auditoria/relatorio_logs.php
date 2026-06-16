@@ -89,6 +89,7 @@
     .barra-botoes-filtro { width: 100%; display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
     .btn-filtrar { background-color: #3182ce; padding: 10px 20px; font-weight: bold; border: none; cursor: pointer; color: white; border-radius: 4px;}
     .btn-limpar { background-color: #a0aec0; padding: 10px 15px; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;}
+    .badge { background-color: var(--surface-highest); border: 1px solid var(--outline); padding: 5px 10px; display: inline-block; white-space: nowrap; }
 </style>
 
 <div class="container">
@@ -159,7 +160,7 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <span class="badge" style="background-color: var(--surface-highest); border: 1px solid var(--outline); padding: 5px 10px;">
+                            <span class="badge">
                                 <?= htmlspecialchars($log['acao']) ?>
                             </span>
                         </td>
