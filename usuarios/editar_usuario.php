@@ -34,6 +34,7 @@
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             
             if ($stmt->execute()) {
+                registrarLog($pdo, $_SESSION['usuario_id'], 'Edição de Usuário', "Editou os dados do usuário: $nome (ID #$id)");
                 header("Location: listar_usuarios.php?sucesso=atualizado");
                 exit;
             }

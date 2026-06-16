@@ -66,6 +66,9 @@
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
             if ($stmt->execute()) {
+                $statusLog = $status_ativo ? 'Ativo' : 'Inativo';
+                registrarLog($pdo, $_SESSION['usuario_id'], 'Edição de Membro', "Atualizou os dados do cliente: $nome (CPF: $cpf). Status definido para: $statusLog.");
+                
                 header("Location: listar_membros.php?sucesso=atualizado");
                 exit;
             }

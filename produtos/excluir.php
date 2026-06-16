@@ -30,8 +30,7 @@
 
             if (password_verify($senha_confirmacao, $dadosGerente['senha_hash'])) {
                 
-                // Busca os dados atuais do produto
-                $sqlBusca = "SELECT quantidade, imagem_capa FROM produtos WHERE id = :id";
+                $sqlBusca = "SELECT titulo, quantidade, imagem_capa FROM produtos WHERE id = :id";
                 $stmtBusca = $pdo->prepare($sqlBusca);
                 $stmtBusca->bindParam(':id', $id_produto, PDO::PARAM_INT);
                 $stmtBusca->execute();
@@ -55,6 +54,9 @@
                             unlink('../' . $produtoAtual['imagem_capa']);
                         }
 
+                        // Exclusão Total
+                        registrarLog($pdo, $id_gerente, 'Exclusão de Produto', "Apagou totalmente o produto '{$produtoAtual['titulo']}' do acervo.");
+
                         header("Location: listar.php?sucesso=excluido");
                         exit;
                     } catch (PDOException $e) {
@@ -65,6 +67,10 @@
                             $stmtZeros = $pdo->prepare($sqlZeros);
                             $stmtZeros->bindParam(':id', $id_produto, PDO::PARAM_INT);
                             $stmtZeros->execute();
+
+                            // 🔴 GATILHO: Inativação por segurança (COM NOME)
+                            registrarLog($pdo, $id_gerente, 'Inativação de Produto', "Zerou o estoque do produto '{$produtoAtual['titulo']}' devido a histórico de empréstimos.");
+
                             header("Location: listar.php?sucesso=zerado");
                             exit;
                         } else {
@@ -82,6 +88,9 @@
                     $stmtUpdate->bindParam(':id', $id_produto, PDO::PARAM_INT);
                     $stmtUpdate->execute();
                     
+                    // Baixa de Estoque 
+                    registrarLog($pdo, $id_gerente, 'Baixa de Estoque', "Removeu {$qtd_remover} unidade(s) do produto '{$produtoAtual['titulo']}'. Estoque restante: {$nova_qtd}.");
+                    
                     header("Location: listar.php?sucesso=reduzido");
                     exit;
                 }
@@ -94,7 +103,7 @@
         }
     }
 
-    // Carregar a tela (GET)
+    // Carrega a tela (GET)
     if (!isset($_GET['id']) && $_SERVER["REQUEST_METHOD"] != "POST") {
         header("Location: listar.php");
         exit;
@@ -119,28 +128,26 @@
     $base_path = "../";
     require_once '../header.php';
 ?>
+
 <style>
-    .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(220,53,69,0.2); text-align: center; max-width: 450px; border-top: 5px solid #dc3545; margin: 0 auto; }
-    h2 { color: #dc3545; margin-top: 0; }
-    .titulo-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
-    .box-interativa { background-color: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 4px; margin-top: 15px; text-align: left; }
-    .box-interativa label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
-    .box-interativa input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    .box-senha { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; text-align: left; margin-top: 15px;}
-    .box-senha label { color: #856404; display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
-    .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    .botoes { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; text-align: center;}
-    .btn-cancelar { background-color: #6c757d; color: white; }
-    .btn-excluir { background-color: #dc3545; color: white; }
-    .erro-msg { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; }
-    .badge-estoque { display: inline-block; background: #3182ce; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; margin-left: 5px;}
-    .capa-filme { max-width: 120px; border-radius: 5px; margin-bottom: 15px; }
+    .card-aviso { text-align: center; max-width: 450px; margin: 0 auto; border-top: 5px solid var(--error-bg) !important; }
+    .card-aviso h2 { color: var(--error-text); margin-top: 0; }
+    .titulo-destaque { font-size: 20px; font-weight: bold; margin: 15px 0; color: var(--text-primary); }
+    
+    .box-interativa, .box-senha { padding: 15px; margin-top: 15px; text-align: left; }
+    .box-interativa label, .box-senha label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    .box-interativa input, .box-senha input { width: 100%; box-sizing: border-box; }
+    
+    .botoes { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
+    .btn { padding: 12px 20px; flex: 1; text-align: center; text-decoration: none; }
+    
+    .badge-estoque { display: inline-block; background: var(--primary); color: var(--on-primary); padding: 3px 8px; border-radius: var(--radius-pill); font-size: 12px; margin-left: 5px; font-family: var(--font-label);}
+    .capa-filme { max-width: 120px; border-radius: var(--radius-sm); margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 </style>
 
 <div class="card-aviso">
     <h2>⚠️ Autenticação Obrigatória</h2>
-    <p>Está a um passo de excluir permanentemente uma ou mais unidades desse item do acervo.</p>
+    <p style="color: var(--text-secondary);">Está a um passo de excluir permanentemente uma ou mais unidades desse item do acervo.</p>
 
     <?php if (!empty($produto['imagem_capa'])): ?>
         <img src="<?= htmlspecialchars($produto['imagem_capa']) ?>" alt="Capa" class="capa-filme">
@@ -161,12 +168,12 @@
         <br>
         <div class="box-senha">
             <label for="senha_confirmacao">Confirme a sua senha de Gerente:</label>
-            <input type="password" id="senha_confirmacao" name="senha_confirmacao" required placeholder="Digite a sua senha...">
+            <input type="password" id="senha_confirmacao" name="senha_confirmacao" required placeholder="Digite a sua senha de segurança...">
         </div>
 
         <br>
         <?php if ($erro): ?>
-            <div class="erro-msg"><?= $erro ?></div>
+            <div class="erro"><?= $erro ?></div>
         <?php endif; ?>
 
         <div class="botoes">

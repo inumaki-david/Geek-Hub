@@ -26,6 +26,7 @@
             $stmt->bindParam(':perfil_acesso', $perfil_acesso);
             
             if ($stmt->execute()) {
+                registrarLog($pdo, $_SESSION['usuario_id'], 'Cadastro de Usuário', "Criou um novo acesso para o funcionário: $nome ($perfil_acesso)");
                 $mensagem = "<div class='sucesso'>Usuário cadastrado com sucesso!</div>";
             }
         } catch (PDOException $e) {

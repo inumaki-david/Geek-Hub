@@ -25,7 +25,7 @@
 
 <style>
     .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; margin-top: 0; }
+    h2 { text-align: center; color: #1275e2; margin-top: 0; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
     th { background-color: #2d3748; color: white; }
@@ -80,7 +80,7 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="editar_usuario.php?id=<?= $user['id'] ?>" class="btn btn-editar">✏️Editar</a>
+                        <a href="editar_usuario.php?id=<?= $user['id'] ?>" class="btn btn-editar">Editar</a>
                         <?php if ($user['id'] != $_SESSION['usuario_id']): ?>
                             <a href="excluir_usuario.php?id=<?= $user['id'] ?>&acao=<?= $user['status_ativo'] ? 'bloquear' : 'ativar' ?>" 
                                class="btn <?= $user['status_ativo'] ? 'btn-excluir' : 'btn-ativar' ?>">

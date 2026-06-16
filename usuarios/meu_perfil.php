@@ -36,6 +36,7 @@
             if ($stmt->execute()) {
                 // Atualiza a "memória" do crachá para o novo nome aparecer no painel
                 $_SESSION['nome_usuario'] = $nome;
+                registrarLog($pdo, $id_logado, 'Meu Perfil', "O usuário atualizou as suas próprias informações de perfil.");
                 $mensagem = "<div class='sucesso'>Seus dados foram atualizados com sucesso!</div>";
             }
         } catch (PDOException $e) {
@@ -105,7 +106,6 @@
         <br><br>
         <?= $mensagem ?>
 
-        <br>
         <a href="../index.php" class="btn btn-voltar">⬅️ Voltar ao Painel</a>
     </form>
 </div>

@@ -56,7 +56,7 @@
         box-shadow: 0 0 10px rgba(0,0,0,0.1); 
         width: 90%; 
     }
-    h2 { text-align: center; color: #333; margin-top: 0; }
+    h2 { text-align: center; color: #1275e2; margin-top: 0; }
 
     /* --- BOTÕES --- */
     .btn { 
@@ -102,22 +102,19 @@
     .status-on { color: #28a745; font-weight: bold; }
     .status-off { color: #dc3545; font-weight: bold; }
 
-    /* --- RESPONSIVIDADE (MOBILE) --- */
     @media (max-width: 768px) {
         /* Tabela para Cards */
         table, thead, tbody, th, td, tr { display: block; }
         thead tr { position: absolute; top: -9999px; left: -9999px; }
-        tr { border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; }
+        tr { margin-bottom: 10px; padding: 10px; }
         td { border: none; position: relative; padding-left: 50%; text-align: right; }
         td:before { 
             position: absolute; left: 10px; width: 45%; padding-right: 10px; 
             white-space: nowrap; text-align: left; font-weight: bold; content: attr(data-label);
         }
-
         /* Botões */
-        .btn { display: block; width: 100%; margin: 5px 0; box-sizing: border-box; }
         .btn-voltar, .btn-novo { margin: 0; }
-
+        .btn btn-editar, .btn btn-excluir { width: 100%; padding-left: 40%; text-align: right; padding: 8px 15px; border-radius: 4px; font-size: 14px; font-weight: bold; text-decoration: none; }
         /* Filtros */
         .filtro-grupo { flex: 1 1 100%; }
     }
@@ -195,9 +192,9 @@
                             <?php endif; ?>
                         </td>
                         <td data-label="Ações">
-                            <a href="editar.php?id=<?= $produto['id'] ?>" class="btn btn-editar">✏️Editar</a>
+                            <a href="editar.php?id=<?= $produto['id'] ?>" class="btn btn-editar">Editar</a>
                             <?php if ($_SESSION['perfil_acesso'] === 'Gerente'): ?>
-                                <a href="excluir.php?id=<?= $produto['id'] ?>" class="btn btn-excluir">🗑️Excluir</a>
+                                <a href="excluir.php?id=<?= $produto['id'] ?>" class="btn btn-excluir">Excluir</a>
                             <?php endif; ?>
                         </td>
                     </tr>

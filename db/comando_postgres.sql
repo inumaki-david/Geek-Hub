@@ -46,3 +46,12 @@ CREATE TABLE emprestimos (
     CONSTRAINT fk_membro FOREIGN KEY (membro_id) REFERENCES membros(id) ON DELETE RESTRICT,
     CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
+
+-- 5. Criação da Tabela de Logs de Auditoria
+CREATE TABLE logsAuditoria (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+    acao VARCHAR(100) NOT NULL,
+    descricao TEXT NOT NULL,
+    data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

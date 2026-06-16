@@ -29,12 +29,18 @@
             $dadosGerente = $stmtGerente->fetch(PDO::FETCH_ASSOC);
 
             if (password_verify($senha_confirmacao, $dadosGerente['senha_hash'])) {
+                $stmtMembro = $pdo->prepare("SELECT nome, cpf FROM membros WHERE id = :id");
+                $stmtMembro->execute(['id' => $id]);
+                $membroExcluido = $stmtMembro->fetch(PDO::FETCH_ASSOC);
+
                 // Se a senha estiver correta, tenta excluir o membro
                 $sql = "DELETE FROM membros WHERE id = :id";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
                 
                 if ($stmt->execute()) {
+                    registrarLog($pdo, $id_gerente, 'Exclusão de Membro', "Excluiu permanentemente o cliente: {$membroExcluido['nome']} (CPF: {$membroExcluido['cpf']}).");
+
                     header("Location: listar_membros.php?sucesso=excluido");
                     exit;
                 }
@@ -80,17 +86,16 @@
 ?>
 
 <style>
-    .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(220,53,69,0.2); text-align: center; max-width: 400px; border-top: 5px solid #dc3545; margin: 0 auto;}
-    h2 { color: #dc3545; margin-top: 0; }
-    .nome-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
-    .box-senha { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: left;}
-    .box-senha label { display: block; font-size: 14px; font-weight: bold; color: #856404; margin-bottom: 8px; }
-    .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .card-aviso { text-align: center; max-width: 450px; margin: 0 auto; border-top: 5px solid var(--error-bg) !important; }
+    .card-aviso h2 { color: var(--error-text); margin-top: 0; }
+    .nome-destaque { font-size: 20px; font-weight: bold; margin: 15px 0; color: var(--text-primary); }
+    
+    .box-senha { padding: 15px; margin-top: 15px; text-align: left; }
+    .box-senha label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    .box-senha input { width: 100%; box-sizing: border-box; }
+    
     .botoes { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
-    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; text-align: center;}
-    .btn-cancelar { background-color: #6c757d; color: white; }
-    .btn-excluir { background-color: #dc3545; color: white; }
-    .box-erro { color: #721c24; background-color: #f8d7da; padding: 15px; border-radius: 4px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+    .btn { padding: 12px 20px; flex: 1; text-align: center; text-decoration: none; }
 </style>
 
 <div class="card-aviso">

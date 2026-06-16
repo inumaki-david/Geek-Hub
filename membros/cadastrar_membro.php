@@ -20,6 +20,7 @@
             $stmt->bindParam(':telefone', $telefone);
 
             if ($stmt->execute()) {
+                registrarLog($pdo, $_SESSION['usuario_id'], 'Cadastro de Membro', "Cadastrou um novo cliente: $nome (CPF: $cpf)");
                 $mensagem = "<div class='sucesso'>Membro cadastrado com sucesso!</div>";
             }
         } catch (PDOException $e) {

@@ -47,6 +47,8 @@
                     $stmtUpdate = $pdo->prepare("UPDATE usuarios SET status_ativo = :status WHERE id = :id");
                     
                     if ($stmtUpdate->execute(['status' => $novo_status, 'id' => $id])) {
+                        $statusNome = $novo_status ? 'Reativou' : 'Bloqueou';
+                    registrarLog($pdo, $id_gerente_logado, 'Alteração de Acesso', "$statusNome o acesso do funcionário: " . $usuario['nome']);
                         header("Location: listar_usuarios.php?sucesso=status_alterado");
                         exit;
                     }
@@ -66,15 +68,12 @@
 <style>
     .card-aviso { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; max-width: 400px; border-top: 5px solid <?= $cor_tema ?>; margin: 0 auto;}
     h2 { color: <?= $cor_tema ?>; margin-top: 0; }
-    .nome-destaque { font-size: 20px; font-weight: bold; color: #333; margin: 15px 0; }
+    .nome-destaque { font-size: 20px; font-weight: bold; margin: 15px 0; color: var(--text-primary); }
     .box-senha { background-color: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: left;}
     .box-senha label { display: block; font-size: 14px; font-weight: bold; color: #333; margin-bottom: 8px; }
     .box-senha input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
     .botoes { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
-    .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; flex: 1; text-align: center;}
-    .btn-cancelar { background-color: #6c757d; color: white; text-decoration: none;}
-    .btn-acao { background-color: <?= $cor_tema ?>; color: white; }
-    .box-erro { color: #721c24; background-color: #f8d7da; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; }
+    .btn { padding: 12px 20px; flex: 1; text-align: center; text-decoration: none; }
 </style>
 
 <div class="card-aviso">

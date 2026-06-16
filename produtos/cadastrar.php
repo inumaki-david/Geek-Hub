@@ -62,6 +62,17 @@
                 
                 // Executa o comando no banco
                 if ($stmt->execute()) {
+                    
+                        $mapa_categorias = [
+                            'Manga' => 'Mangá / HQ',
+                            'Filme' => 'Filme (DVD/Blu-ray)',
+                            'Jogo'  => 'Jogo (Mídia Física)',
+                            'Outro' => 'Outro Produto Geek'
+                        ];
+                        $cat_slug = $categoria;
+                        $nome_categoria = array_key_exists($cat_slug, $mapa_categorias) ? $mapa_categorias[$cat_slug] : $cat_slug;
+                    
+                    registrarLog($pdo, $_SESSION['usuario_id'], 'Cadastro de Produto', "Cadastrou um novo item no acervo: $titulo (Categoria: $nome_categoria)");
                     $mensagem = "<div class='sucesso'>Produto cadastrado com sucesso!</div>";
                 }
             } catch (PDOException $e) {
@@ -93,7 +104,7 @@
     <form action="cadastrar.php" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label>Título da Obra *</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ex: Star Wars II - O Ataque dos Clones / Jujutsu Kaisen V.04" required>
+            <input type="text" id="titulo" name="titulo" placeholder="Ex: Star Wars II - O Ataque dos Clones / Duna" required>
         </div>
 
         <div class="form-group">

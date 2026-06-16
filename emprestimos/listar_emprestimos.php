@@ -92,7 +92,7 @@
 
 <style>
     .container { max-width: 1150px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; margin-top: 0; }
+    h2 { text-align: center; color: #1275e2; margin-top: 0; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
     th, td { border: 1px solid #ddd; padding: 12px; text-align: center; vertical-align: middle; }
     th { background-color: #2d3748; color: white; }
@@ -127,12 +127,12 @@
 
     <form method="GET" action="listar_emprestimos.php" class="box-filtro">
         <div class="filtro-grupo" style="flex: 2; min-width: 250px;">
-            <label for="busca">Pesquisar Cliente:</label>
-            <input type="text" id="busca" name="busca" value="<?= htmlspecialchars($busca) ?>" placeholder="Nome ou CPF do cliente...">
+            <label for="busca">Pesquisar Membro:</label>
+            <input type="text" id="busca" name="busca" value="<?= htmlspecialchars($busca) ?>" placeholder="Nome ou CPF do membro...">
         </div>
 
         <div class="filtro-grupo">
-            <label for="status_membro">Situação do Cliente:</label>
+            <label for="status_membro">Situação do Membro:</label>
             <select id="status_membro" name="status_membro">
                 <option value="">Qualquer Situação</option>
                 <option value="Ativo" <?= $status_membro == 'Ativo' ? 'selected' : '' ?>>Apenas Ativos</option>
@@ -165,9 +165,9 @@
             <label for="ordenacao">Ordenar por:</label>
             <select id="ordenacao" name="ordenacao">
                 <option value="padrao" <?= $ordenacao == 'padrao' ? 'selected' : '' ?>>🔄 Padrão</option>
-                <option value="recente" <?= $ordenacao == 'recente' ? 'selected' : '' ?>>📅Mais Recentes (Saída)</option>
-                <option value="alfabetica_cliente" <?= $ordenacao == 'alfabetica_cliente' ? 'selected' : '' ?>>👤A-Z (Nome do Cliente)</option>
-                <option value="alfabetica_produto" <?= $ordenacao == 'alfabetica_produto' ? 'selected' : '' ?>>📦A-Z (Título do Produto)</option>
+                <option value="recente" <?= $ordenacao == 'recente' ? 'selected' : '' ?>>📅 Mais Recentes (Saída)</option>
+                <option value="alfabetica_cliente" <?= $ordenacao == 'alfabetica_cliente' ? 'selected' : '' ?>>👤 A-Z (Nome do Cliente)</option>
+                <option value="alfabetica_produto" <?= $ordenacao == 'alfabetica_produto' ? 'selected' : '' ?>>📦 A-Z (Título do Produto)</option>
             </select>
         </div>
 
@@ -181,7 +181,7 @@
         <thead>
             <tr>
                 <th>Cód</th>
-                <th>Cliente</th>
+                <th>Membro</th>
                 <th>Produto</th>
                 <th>Categoria</th> 
                 <th>Data Saída</th>

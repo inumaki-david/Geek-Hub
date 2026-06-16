@@ -36,6 +36,11 @@
             }
 
             $pdo->commit();
+            // Busca os nomes para um log mais limpo
+            $stmtNomes = $pdo->query("SELECT (SELECT titulo FROM produtos WHERE id = $produto_id) AS produto, (SELECT nome FROM membros WHERE id = $membro_id) AS membro");
+            $nomes = $stmtNomes->fetch(PDO::FETCH_ASSOC);
+            registrarLog($pdo, $_SESSION['usuario_id'], 'Devolução', "Recebeu a devolução do produto '{$nomes['produto']}' do cliente '{$nomes['membro']}'. Multa aplicada: R$ " . number_format($multa_aplicada, 2, ',', '.'));
+
             header("Location: listar_emprestimos.php?sucesso=devolvido");
             exit;
         } catch (Exception $e) {
@@ -88,17 +93,15 @@
 ?>
 
 <style>
-    .recibo-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin: 0 auto; }
-    h2 { text-align: center; color: #17a2b8; margin-top: 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; }
+    .recibo-card { width: 100%; max-width: 500px; margin: 0 auto; }
+    h2 { text-align: center; color: var(--primary); margin-top: 0; border-bottom: 1px solid var(--outline); padding-bottom: 15px; }
     .linha { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
-    .destaque { font-weight: bold; color: #333; }
-    .atraso { color: #dc3545; font-weight: bold; }
-    hr { border: 0; border-top: 1px dashed #ccc; margin: 20px 0; }
-    .total { font-size: 22px; font-weight: bold; color: #28a745; text-align: right; }
+    .destaque { font-weight: bold; color: var(--text-primary); }
+    .atraso { color: var(--error-text); font-weight: bold; }
+    hr { border: 0; border-top: 1px dashed var(--outline); margin: 20px 0; }
+    .total { font-size: 22px; font-weight: bold; color: var(--success-text); text-align: right; }
     .botoes { display: flex; justify-content: space-between; margin-top: 30px; gap: 10px; }
-    .btn { padding: 12px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; flex: 1; text-align: center; }
-    .btn-cancelar { background-color: #6c757d; color: white; }
-    .btn-confirmar { background-color: #17a2b8; color: white; }
+    .btn { padding: 12px 20px; flex: 1; text-align: center; text-decoration: none; }
 </style>
 
 <div class="recibo-card">
@@ -124,7 +127,7 @@
         </div>
         <div class="linha atraso">
             <span>Multa Aplicada:</span>
-            <span>+ R$ <?= number_format($multa, 2, ',', '.') ?></span>
+            <span>+ R$ <?= number_format($multa, 2, ',', '.') ?> (Inclui taxa fixa de R$ <?= number_format($taxa_fixa_atraso, 2, ',', '.') ?>)</span>
         </div>
     <?php else: ?>
         <div class="linha" style="color: #28a745;">

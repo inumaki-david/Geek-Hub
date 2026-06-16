@@ -9,138 +9,266 @@ $base = isset($base_path) ? $base_path : '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geek Hub - Sistema de Gestão</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600&family=Questrial&family=Ubuntu:wght@600;700&display=swap" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        const temaSalvo = localStorage.getItem('geekhub_tema') || 'light';
-        document.documentElement.setAttribute('data-theme', temaSalvo);
-    </script>
-
     <style>
+        /* ========================================================
+           DESIGN SYSTEM: UBUNTU DYNAMIC DARK
+           ======================================================== */
         :root {
-            --bg-global: #f4f4f9;
-            --text-global: #333333;
-            --bg-card: #ffffff;
-            --border-color: #dddddd;
-            --bg-input: #ffffff;
-            --nav-bg: #2d3748;
-            --nav-text: #ffffff;
-            --bg-filtro: #e2e8f0;
+            /* Cores e Superfícies Tonais */
+            --bg-global: #121414;
+            --surface-low: #1a1c1c;
+            --surface-container: #1e2020;
+            --surface-high: #282a2b;
+            --surface-highest: #333535;
+            
+            /* Textos e Contornos */
+            --text-primary: #e2e2e2;
+            --text-secondary: #c1c6d5;
+            --outline: #414753;
+            --outline-light: #8b919f;
+            
+            /* Cores de Marca (Brand) */
+            --primary: #1275e2; /* Primary Blue */
+            --on-primary: #ffffff;
+            --secondary: #f65c0e; /* Secondary Orange */
+            --on-secondary: #ffffff;
+            --tertiary: #333333; /* Structural Charcoal */
+            
+            /* Estados e Erros */
+            --error-bg: #93000a;
+            --error-text: #ffb4ab;
+            --success-bg: #0d3d23;
+            --success-text: #6ce9a6;
+
+            /* Tipografia */
+            --font-head: 'Ubuntu', sans-serif;
+            --font-body: 'Questrial', sans-serif;
+            --font-label: 'Plus Jakarta Sans', sans-serif;
+
+            /* Formas (Shapes) */
+            --radius-sm: 4px;
+            --radius-btn: 8px;
+            --radius-card: 16px;
+            --radius-pill: 9999px;
+            
+            /* Espaçamentos */
+            --gutter: 16px;
         }
 
-        [data-theme="dark"] {
-            --bg-global: #1a202c;
-            --text-global: #e2e8f0;
-            --bg-card: #2d3748;
-            --border-color: #4a5568;
-            --bg-input: #4a5568;
-            --nav-bg: #111418;
-            --nav-text: #e2e8f0;
-            --bg-filtro: #1a202c;
-        }
-
+        /* ESTILOS GLOBAIS BASE */
         body { 
-            font-family: Arial, sans-serif; 
-            background-color: var(--bg-global); 
-            color: var(--text-global); 
+            font-family: var(--font-body); 
+            background-image:linear-gradient(rgba(0, 0, 0, 0.55)), url('<?= $base ?>assets/background.svg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; 
+            
+            color: var(--text-primary); 
             margin: 0; padding: 0; 
-            transition: background-color 0.3s ease, color 0.3s ease; 
+            font-size: 14px;
+            line-height: 20px;
+            overflow-x: hidden; 
+        }
+
+        h1, h2, h3, h4, h5, h6 { 
+            font-family: var(--font-head); 
+            color: var(--text-primary); 
+            font-weight: 700;
         }
         
-        .navbar { background-color: var(--nav-bg); color: var(--nav-text); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: background-color 0.3s;}
-        .navbar-links { display: flex; gap: 15px; align-items: center; }
-        .navbar a { color: var(--nav-text); text-decoration: none; font-size: 15px; font-weight: bold; padding: 5px 10px; border-radius: 4px; transition: 0.3s; }
-        .navbar a:hover { background-color: rgba(255,255,255,0.1); }
-        .nav-brand { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .nav-brand a { color: #63b3ed; text-decoration: none; }
-        .nav-user { font-size: 13px; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 12px; }
-        .btn-sair { color: #fc8181 !important; }
-
-        /* ESTILOS DA LOGO */
-        .logo-img {
-            height: 66px; 
-            width: auto;  
-            object-fit: contain;
-            transition: transform 0.3s ease;
-            padding: 1px; 
+        /* NAVBAR: High-Tech e Limpa */
+        .navbar { 
+            background-color: var(--bg-global); 
+            border-bottom: 1px solid var(--outline);
+            padding: 15px 24px; 
+            display: flex; justify-content: space-between; align-items: center; 
         }
-        .logo-img:hover {
-            transform: scale(1.05); 
+        .navbar-links { display: flex; gap: var(--gutter); align-items: center; }
+        .navbar a { 
+            color: var(--text-primary); 
+            font-family: var(--font-label);
+            text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--radius-btn); transition: 0.3s; 
+        }
+        .navbar a:hover { background-color: var(--surface-highest); color: var(--primary); }
+        .nav-brand { font-size: 24px; font-family: var(--font-head); font-weight: 700; }
+        .nav-brand a { color: var(--primary) !important; background: transparent !important; }
+        .nav-user { font-family: var(--font-label); font-size: 12px; background: var(--surface-high); padding: 6px 12px; border-radius: var(--radius-pill); border: 1px solid var(--outline); }
+        .btn-sair { color: var(--error-text) !important; }
+        .btn-sair:hover { background-color: var(--error-bg) !important; }
+
+        .logo-img { height: 50px; width: auto; object-fit: contain; transition: transform 0.3s ease; }
+        .logo-img:hover { transform: scale(1.05); }
+        .main-content { padding: 32px 24px; min-height: 80vh; }
+
+        /* ========================================================
+           OVERRIDE MÁGICO: FORÇA O DESIGN SYSTEM EM TODAS AS PÁGINAS
+           ======================================================== */
+        
+        /* Cards & Containers (Level 1 Elevation) */
+        .container, .card, .recibo-card, .card-aviso {
+            background-color: var(--surface-container) !important; 
+            color: var(--text-primary) !important; 
+            border-radius: var(--radius-card) !important;
+            border: 1px solid var(--outline) !important;
+            box-shadow: none !important; /* Sem sombra dura, foco na borda e cor tonal */
+            padding: 24px !important;
+            opacity: 0.94;
+        }
+
+        /* Inputs e Textareas */
+        input, select, textarea { 
+            background-color: var(--surface-high) !important; 
+            color: var(--text-primary) !important; 
+            border: 1px solid var(--outline-light) !important; 
+            border-radius: var(--radius-btn) !important;
+            font-family: var(--font-body) !important;
+            padding: 10px 12px !important;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary) !important;
+            outline: none !important;
+            box-shadow: 0 0 0 2px rgba(18, 117, 226, 0.3) !important; /* Glow Primário */
+        }
+        label { font-family: var(--font-label) !important; color: var(--text-secondary) !important; font-size: 14px !important; }
+        
+        /* Botões Globais */
+        button, .btn {
+            font-family: var(--font-label) !important;
+            border-radius: var(--radius-btn) !important;
+            font-size: 14px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none !important;
+            transition: all 0.3s ease !important;
         }
         
-        /* BOTÃO DE TEMA */
-        .btn-tema { background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.3s;}
-        .btn-tema:hover { transform: scale(1.1); }
+        /* Primary Action (Azul Ubuntu) */
+        button[type="submit"], .btn-novo, .btn-filtrar, .btn-acao, .btn-confirmar {
+            background-color: var(--primary) !important;
+            color: var(--on-primary) !important;
+        }
+        button[type="submit"]:hover, .btn-novo:hover { background-color: #0d5bb0 !important; } /* Darker blue */
 
-        .main-content { padding: 30px 20px; min-height: 80vh; }
+        /* Secondary Action (Laranja Ubuntu) */
+        .btn-editar, .btn-devolver {
+            background-color: var(--secondary) !important;
+            color: var(--on-secondary) !important;
+        }
+        .btn-editar:hover, .btn-devolver:hover { background-color: #d14a06 !important; }
+
+        /* Neutral / Tertiary Action */
+        .btn-voltar, .btn-cancelar, .btn-limpar {
+            background-color: var(--tertiary) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--outline) !important;
+        }
+        
+        /* Danger Action */
+        .btn-excluir { background-color: var(--error-bg) !important; color: var(--error-text) !important; border: 1px solid #000000 !important;}
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--outline) !important; 
+            border-radius: var(--radius-btn) !important;
+            margin-top: 20px;
+        }
+
+        /* Tabelas */
+        table { border-collapse: separate !important; border-spacing: 0 !important; width: 100%; border: 1px solid var(--outline) !important; border-radius: var(--radius-btn) !important; overflow: hidden; }
+        table th { 
+            background-color: var(--surface-highest) !important; 
+            color: var(--text-primary) !important; 
+            font-family: var(--font-label) !important;
+            border: none !important;
+            border-bottom: 1px solid var(--outline) !important;
+            padding: 16px 12px !important;
+            text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;
+        }
+        table td { 
+            border: none !important; 
+            border-bottom: 1px solid var(--outline) !important; 
+            color: var(--text-secondary) !important; 
+            background-color: var(--surface-container) !important;
+            padding: 14px 12px !important;
+        }
+        table tr:last-child td { border-bottom: none !important; }
+        
+        /* Filtros e Caixas Especiais */
+        .box-filtro, .checkbox-group, .box-senha { 
+            background-color: var(--surface-low) !important; 
+            border: 1px solid var(--outline) !important; 
+            border-radius: var(--radius-card) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* Badges e Status (Shape: Pill) */
+        .status, .badge, .badge-cat, .badge-perfil {
+            border-radius: var(--radius-pill) !important;
+            font-family: var(--font-label) !important;
+            text-transform: uppercase; font-size: 11px !important; padding: 4px 10px !important;
+        }
+        .badge-cat { background-color: var(--surface-highest) !important; color: var(--text-primary) !important; border: 1px solid var(--outline) !important;}
+        
+        .status-pendente { background-color: #4a3311 !important; color: #f6ad55 !important; border: 1px solid #f6ad55 !important; }
+        .status-concluido, .status-on { background-color: var(--success-bg) !important; color: var(--success-text) !important; border: 1px solid var(--success-text) !important; padding: 4px 10px !important; border-radius: var(--radius-pill) !important; }
+        .status-atrasado, .status-off { background-color: var(--error-bg) !important; color: var(--error-text) !important; border: 1px solid var(--error-text) !important; padding: 4px 10px !important; border-radius: var(--radius-pill) !important; }
+
+        /* Caixas de Alerta */
+        .info-box { background-color: rgba(18, 117, 226, 0.1) !important; border-left: 4px solid var(--primary) !important; color: #aac7ff !important; border-radius: var(--radius-sm) !important; }
+        .sucesso, .box-previsao { background-color: var(--success-bg) !important; border: 1px solid var(--success-text) !important; color: var(--success-text) !important; border-radius: var(--radius-btn) !important; }
+        .erro, .box-erro, .alerta-bloqueio { background-color: var(--error-bg) !important; border: 1px solid var(--error-text) !important; color: var(--error-text) !important; border-radius: var(--radius-btn) !important; padding: 4px 10px !important; border-radius: var(--radius-pill) !important;}
+        
+        /* Ajuste do Select2 */
+        .select2-container--default .select2-selection--single { background-color: var(--surface-high) !important; border: 1px solid var(--outline-light) !important; border-radius: var(--radius-btn) !important; height: 42px !important; }
+        .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--text-primary) !important; line-height: 40px !important; font-family: var(--font-body); }
+        .select2-dropdown { background-color: var(--surface-container) !important; border: 1px solid var(--outline) !important; border-radius: var(--radius-btn) !important; }
+        .select2-results__option { color: var(--text-secondary) !important; font-family: var(--font-body); }
+        .select2-results__option[aria-selected="true"] { background-color: var(--surface-highest) !important; color: var(--text-primary) !important; }
+        .select2-results__option--highlighted[aria-selected] { background-color: var(--primary) !important; color: var(--on-primary) !important; }
 
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: row; 
-                gap: 8px; /* Cria um espaço entre a logo e os links */
-                padding: 15px 10px;
+            .navbar { flex-direction: row; gap: var(--gutter); padding: 16px; }
+            .navbar-links { flex-wrap: wrap; justify-content: center; width: 100%; gap: 10px;}
+            .nav-user { width: 100%; text-align: center; margin-bottom: 8px; }
+            .main-content { padding: 16px 10px; }
+            
+            .container, .card, .recibo-card, .card-aviso {
+                padding: 16px !important;
+                margin-top: 10px !important;
+                opacity: 0.94;
             }
-            .navbar-links {
-                flex-wrap: wrap; /* Permite que os botões quebrem a linha se faltar espaço */
-                justify-content: center; /* Centraliza os botões */
+
+            /* Empilhar formulários de filtros */
+            .box-filtro {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+            .filtro-grupo { min-width: 100% !important; }
+
+            /* Empilhar botões nas páginas de edição e devolução */
+            .botoes, .barra-botoes-filtro {
+                flex-direction: column !important;
                 width: 100%;
-                gap: 8px;
+                gap: 10px !important;
             }
-            .nav-user {
-                width: 100%; /* Faz a tag do nome do funcionário ocupar a linha inteira */
+            .botoes .btn, .barra-botoes-filtro button, .barra-botoes-filtro a {
+                width: 100% !important;
+                margin: 0 !important;
                 text-align: center;
-                margin-bottom: 5px;
-            }
-            .logo-img {
-                height: 66px; /* Diminui um pouco a logo no celular para poupar espaço */
-            }
-            .main-content { 
-                padding: 15px 10px; /* Diminui as margens laterais do corpo da página */
+                box-sizing: border-box;
             }
         }
-
-        /* OVERRIDE PARA DARK MODE */
-        [data-theme="dark"] .container, 
-        [data-theme="dark"] .card, 
-        [data-theme="dark"] .recibo-card, 
-        [data-theme="dark"] .card-aviso {
-            background-color: var(--bg-card) !important; 
-            color: var(--text-global) !important; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
-        }
-        
-        [data-theme="dark"] .container h2, 
-        [data-theme="dark"] .card h3,
-        [data-theme="dark"] .recibo-card h2 { color: #63b3ed !important; }
-        [data-theme="dark"] .card-aviso h2 { color: #fc8181 !important; }
-        [data-theme="dark"] label, [data-theme="dark"] .linha span, [data-theme="dark"] .destaque, [data-theme="dark"] .nome-destaque { color: var(--text-global) !important; }
-
-        [data-theme="dark"] table th { background-color: var(--nav-bg) !important; border-color: var(--border-color) !important; }
-        [data-theme="dark"] table td { border-color: var(--border-color) !important; color: var(--text-global) !important; }
-        
-        [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea { 
-            background-color: var(--bg-input) !important; 
-            color: var(--text-global) !important; 
-            border-color: var(--border-color) !important; 
-        }
-        
-        [data-theme="dark"] .box-filtro, [data-theme="dark"] .checkbox-group, [data-theme="dark"] .box-senha { 
-            background-color: var(--bg-filtro) !important; 
-            border-color: var(--border-color) !important; 
-            color: var(--text-global) !important;
-        }
-
-        [data-theme="dark"] .info-box { background-color: #2a4365 !important; border-color: #3182ce !important; color: #bee3f8 !important; }
-        [data-theme="dark"] .box-previsao, [data-theme="dark"] .sucesso { background-color: #22543d !important; border-color: #2f855a !important; color: #c6f6d5 !important; }
-        [data-theme="dark"] .erro, [data-theme="dark"] .box-erro, [data-theme="dark"] .alerta-bloqueio { background-color: #742a2a !important; border-color: #9b2c2c !important; color: #fed7d7 !important; }
-        
-        [data-theme="dark"] .select2-container--default .select2-selection--single { background-color: var(--bg-input) !important; border-color: var(--border-color) !important; }
-        [data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--text-global) !important; }
-        [data-theme="dark"] .select2-dropdown { background-color: var(--bg-card) !important; border-color: var(--border-color) !important; }
-        [data-theme="dark"] .select2-results__option { color: var(--text-global) !important; }
-        [data-theme="dark"] .select2-results__option[aria-selected="true"] { background-color: var(--border-color) !important; }
-        [data-theme="dark"] .select2-results__option--highlighted[aria-selected] { background-color: #3182ce !important; }
     </style>
 </head>
 <body>
@@ -148,7 +276,7 @@ $base = isset($base_path) ? $base_path : '';
 <div class="navbar">
     <div class="nav-brand">
         <a href="<?= $base ?>index.php" style="text-decoration: none; display: flex; align-items: center;">
-            <img src="<?= $base ?>assets/logo.svg" alt="Geek Hub Logo" class="logo-img">
+            <img src="<?= $base ?>../assets/logo.svg" alt="Geek Hub Logo" class="logo-img">
         </a>
     </div>
     
@@ -158,29 +286,16 @@ $base = isset($base_path) ? $base_path : '';
                 $nome_perfil = ($_SESSION['perfil_acesso'] === 'Comum') ? 'Funcionário' : $_SESSION['perfil_acesso'];
             ?>
             <span class="nav-user">👤 <?= htmlspecialchars($_SESSION['nome_usuario']) ?> - <?= htmlspecialchars($nome_perfil) ?></span>
-            <button id="btn-toggle-tema" class="btn-tema" title="Alternar Tema">🌙</button>
             <a href="<?= $base ?>usuarios/meu_perfil.php">Meu Perfil</a>
             <a href="<?= $base ?>index.php?sair=true" class="btn-sair">Logout</a>
         </div>
     <?php endif; ?>
 </div>
 
-<script>
-    const btnTema = document.getElementById('btn-toggle-tema');
-    
-    if (document.documentElement.getAttribute('data-theme') === 'dark') {
-        btnTema.textContent = '☀️';
-    }
-
-    btnTema.addEventListener('click', () => {
-        let temaAtual = document.documentElement.getAttribute('data-theme');
-        let novoTema = temaAtual === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', novoTema);
-        localStorage.setItem('geekhub_tema', novoTema);
-        
-        btnTema.textContent = novoTema === 'dark' ? '☀️' : '🌙';
+<!-- <script>
+    $(document).ready(function() {
+        $("table").wrap("<div class='table-responsive'></div>");
     });
-</script>
+</script> -->
 
 <div class="main-content">

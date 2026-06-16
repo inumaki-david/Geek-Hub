@@ -57,6 +57,11 @@
             $stmtUpdate->execute();
 
             $pdo->commit();
+            // Busca os nomes para um log mais limpo
+            $stmtNomes = $pdo->query("SELECT (SELECT titulo FROM produtos WHERE id = $produto_id) AS produto, (SELECT nome FROM membros WHERE id = $membro_id) AS membro");
+            $nomes = $stmtNomes->fetch(PDO::FETCH_ASSOC);
+            registrarLog($pdo, $usuario_id, 'Novo Empréstimo', "Realizou o empréstimo do produto '{$nomes['produto']}' para o membro '{$nomes['membro']}'. Previsão de devolução: " . date('d/m/Y', strtotime($data_fim_prevista)));
+            
             $mensagem = "<div class='sucesso'>Empréstimo registado com sucesso! Estoque atualizado.</div>";
 
         } catch (Exception $e) {

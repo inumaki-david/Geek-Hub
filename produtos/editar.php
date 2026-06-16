@@ -92,6 +92,7 @@
                 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
                 
                 if ($stmt->execute()) {
+                    registrarLog($pdo, $_SESSION['usuario_id'], 'Edição de Produto', "Atualizou os dados do produto: '{$produto['titulo']}' (ID #$id).");
                     header("Location: listar.php?sucesso=atualizado");
                     exit;
                 }
