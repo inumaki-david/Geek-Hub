@@ -1,4 +1,4 @@
-    <?php
+<?php
     session_start(); // Inicia a sessão e inclui a conexão
     require_once '../connect.php'; // Inclui a conexão com o bd
 
