@@ -19,7 +19,7 @@
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         // Força a conexão UTF-8
-        $pdo->exec("SET client_encoding = 'UTF8'");
+        $pdo->exec("SET client_encoding TO 'UTF8'");
 
     } catch (PDOException $e) {
         // Se a conexão falhar (senha errada, banco não existe), exie mensagem de erro
