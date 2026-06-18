@@ -18,8 +18,8 @@
         // Configura para mostrar erros detalhados 
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Mensagem para teste inicial da conexão.
-        // echo "Conexão com o banco Geek Hub realizado com sucesso!";
+        // Força a conexão UTF-8
+        $pdo->exec("SET client_encoding = 'UTF8'");
 
     } catch (PDOException $e) {
         // Se a conexão falhar (senha errada, banco não existe), exie mensagem de erro
