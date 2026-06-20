@@ -109,7 +109,7 @@ Além disso, o sistema busca aplicar na prática conceitos de desenvolvimento we
 
 ## 2. Descrição Global
 
-#### Prototipagem Figma - Média Fidelidade
+#### 2.1 Prototipagem Figma - Média Fidelidade
 
 [Prototipagem Figma](https://www.figma.com/design/i6kSmnOXzrAJUnJAjW2FNw/Prototipagem---Geek-Hub?node-id=0-1&t=ekYmz7CDrs0KIXR7-1)
 
