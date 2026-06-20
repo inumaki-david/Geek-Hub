@@ -111,7 +111,7 @@ Além disso, o sistema busca aplicar na prática conceitos de desenvolvimento we
 
 #### Prototipagem Figma - Média Fidelidade
 
-https://www.figma.com/design/i6kSmnOXzrAJUnJAjW2FNw/Prototipagem---Geek-Hub?node-id=1-3&t=ekYmz7CDrs0KIXR7-1
+[text](https://www.figma.com/design/i6kSmnOXzrAJUnJAjW2FNw/Prototipagem---Geek-Hub?node-id=0-1&t=ekYmz7CDrs0KIXR7-1)
 
 #### 2.2 Funções do Sistema
 O sistema deve realizar as seguintes funções principais:
@@ -288,7 +288,7 @@ O sistema utiliza um banco de dados relacional composto por 5 tabelas principais
 | Campo | Tipo | Restrições | Descrição |
 | :--- | :--- | :--- | :--- |
 | *`id`* | SERIAL | PRIMARY KEY | Identificador único do log. |
-| *`usuario_id`* | INT | FK, ON DELETE SET NULL | Usuário que executou a ação. Permite NULL caso o usuário seja excluído (RN12). |
+| *`usuario_id`* | INT | FOREIGN KEY, ON DELETE SET NULL | Usuário que executou a ação. Permite NULL caso o usuário seja excluído (RN12). |
 | *`acao`* | VARCHAR(100) | NOT NULL | Tipo da ação (Ex: Novo Empréstimo, Exclusão). |
 | *`descricao`* | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Momento exato em que a ação ocorreu. |
 ---
