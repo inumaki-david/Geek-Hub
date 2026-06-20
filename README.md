@@ -111,7 +111,7 @@ Além disso, o sistema busca aplicar na prática conceitos de desenvolvimento we
 
 #### Prototipagem Figma - Média Fidelidade
 
-[text](https://www.figma.com/design/i6kSmnOXzrAJUnJAjW2FNw/Prototipagem---Geek-Hub?node-id=0-1&t=ekYmz7CDrs0KIXR7-1)
+[Prototipagem Figma](https://www.figma.com/design/i6kSmnOXzrAJUnJAjW2FNw/Prototipagem---Geek-Hub?node-id=0-1&t=ekYmz7CDrs0KIXR7-1)
 
 #### 2.2 Funções do Sistema
 O sistema deve realizar as seguintes funções principais:
