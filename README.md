@@ -109,7 +109,11 @@ Além disso, o sistema busca aplicar na prática conceitos de desenvolvimento we
 
 ## 2. Descrição Global
 
-#### 2.1 Funções do Sistema
+#### Prototipagem Figma - Média Fidelidade
+
+https://www.figma.com/design/i6kSmnOXzrAJUnJAjW2FNw/Prototipagem---Geek-Hub?node-id=1-3&t=ekYmz7CDrs0KIXR7-1
+
+#### 2.2 Funções do Sistema
 O sistema deve realizar as seguintes funções principais:
 * Cadastrar funcionários/gerentes da locadora.
 * Realizar o login de funcionários/gerentes da locadora.
@@ -126,7 +130,7 @@ O sistema deve realizar as seguintes funções principais:
 * Registar automaticamente um log de auditoria para ações críticas (cadastro, edição, exclusão e empréstimos).
 * Consultar painel de auditoria de logs (exclusivo para Gerentes).
 
-#### 2.2 Características do Usuários
+#### 2.3 Características do Usuários
 | Usuário | Descrição |
 | :--- | :--- | 
 | **Gerente (Adm)** | Usuário que possui total acesso ao sistema, pode realizar todas as operações de consulta e cadastro e exclusão de títulos/produtos disponíveis, porém precisa autenticar e confirmar com sua senha de adm. |
@@ -228,7 +232,7 @@ O sistema deve realizar as seguintes funções principais:
 | **RN12** | Integridade da Auditoria | Se um usuário for excluído, os seus rastros de auditoria devem permanecer no banco (ON DELETE SET NULL) para garantir rastreabilidade vitalícia. | 
 ---
 
-### 4. Estruturação do Banco de Dados 
+## 4. Estruturação do Banco de Dados 
 O sistema utiliza um banco de dados relacional composto por 5 tabelas principais. As relações garantem a integridade referencial exigida pelas Regras de Negócio.
 
 #### ENTIDADE: *`usuarios`* (Funcionários e Gerentes)
