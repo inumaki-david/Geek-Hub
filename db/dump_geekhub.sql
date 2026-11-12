@@ -259,15 +259,15 @@ ALTER TABLE ONLY public.usuarios ALTER COLUMN id SET DEFAULT nextval('public.usu
 COPY public.emprestimos (id, produto_id, membro_id, usuario_id, data_inicio, data_fim_prevista, data_devolucao, valor_diaria_cobrado, multa_aplicada, status) FROM stdin;
 2	2	14	1	2026-06-09 23:18:53.31715	2026-06-11	\N	5.49	0.00	Pendente
 6	11	14	1	2026-06-10 21:20:54.507833	2026-06-12	\N	100.00	0.00	Pendente
-4	7	14	1	2026-06-10 19:05:58.659563	2026-06-17	2026-06-10	9.95	0.00	Conclu├¡do
+4	7	14	1	2026-06-10 19:05:58.659563	2026-06-17	2026-06-10	9.95	0.00	Concluído
 9	10	21	1	2026-06-11 08:12:43.471479	2026-06-12	\N	20.00	0.00	Pendente
 10	11	21	1	2026-06-11 08:14:15.252961	2026-06-18	\N	100.00	0.00	Pendente
-1	3	14	1	2026-06-09 23:16:42.776194	2026-06-17	2026-06-11	6.49	0.00	Conclu├¡do
-11	8	18	1	2026-06-11 09:26:37.269655	2027-06-11	2026-06-11	11.50	0.00	Conclu├¡do
+1	3	14	1	2026-06-09 23:16:42.776194	2026-06-17	2026-06-11	6.49	0.00	Concluído
+11	8	18	1	2026-06-11 09:26:37.269655	2027-06-11	2026-06-11	11.50	0.00	Concluído
 12	7	22	1	2026-06-12 18:22:58.85461	2026-06-13	\N	9.95	0.00	Pendente
 13	9	24	1	2026-06-15 20:01:48.956883	2026-06-16	\N	10.00	0.00	Pendente
 14	8	25	4	2026-06-15 22:37:20.057747	2026-06-17	\N	11.50	0.00	Pendente
-8	9	21	1	2026-06-10 23:57:41.794798	2026-06-16	2026-06-15	10.00	0.00	Conclu├¡do
+8	9	21	1	2026-06-10 23:57:41.794798	2026-06-16	2026-06-15	10.00	0.00	Concluído
 15	10	25	1	2026-06-15 23:01:51.775586	2026-06-17	\N	20.00	0.00	Pendente
 \.
 
@@ -291,7 +291,7 @@ COPY public.membros (id, nome, cpf, telefone, status_ativo) FROM stdin;
 18	Larissa Nicodemo	987.654.321-01	(19) 99334-9723	t
 21	Davi Brenna	537.653.198-80	(19) 99334-9723	f
 22	Larissa Vieira	357.245.644-78	(19) 55278-9340	f
-25	Emily Guimar├úes	164.489.756-45	(19) 99334-9723	t
+25	Emily Guimarães	164.489.756-45	(19) 99334-9723	t
 \.
 
 
@@ -300,13 +300,13 @@ COPY public.membros (id, nome, cpf, telefone, status_ativo) FROM stdin;
 --
 
 COPY public.produtos (id, titulo, categoria, quantidade, valor_diaria, imagem_capa, disponivel) FROM stdin;
-11	Pok├®mon Box Ogerpon Ex - Copag	Outro	0	80.00	../uploads/capas/capa_6a29ff5422378.webp	f
+11	Pokémon Box Ogerpon Ex - Copag	Outro	0	80.00	../uploads/capas/capa_6a29ff5422378.webp	f
 3	Jujutsu Kaisen V.04	Manga	20	6.69	../uploads/capas/capa_6a28ac5c3be59.webp	t
-8	Star Wars IV - Uma Nova Esperan├ºa	Filme	14	11.50	../uploads/capas/capa_6a29eaaab2026.jpg	t
+8	Star Wars IV - Uma Nova Esperança	Filme	14	11.50	../uploads/capas/capa_6a29eaaab2026.jpg	t
 9	Pragmata - PS5	Jogo	19	10.00	../uploads/capas/capa_6a29f3e15a411.jpg	t
 2	Jujutsu Kaisen V.01	Manga	10	5.49	../uploads/capas/capa_6a28abd45e3d5.webp	t
 1	Jujutsu Kaisen V.09	Manga	20	7.49	../uploads/capas/capa_6a28a43e214c6.png	t
-10	Box Pok├®mon Mega Charizard Y	Outro	1	20.00	../uploads/capas/capa_6a29f455e9f13.png	t
+10	Box Pokémon Mega Charizard Y	Outro	1	20.00	../uploads/capas/capa_6a29f455e9f13.png	t
 12	Duna - Parte I	Filme	12	9.55	../uploads/capas/capa_6a30b2a992187.jpg	t
 13	Duna - Parte II	Filme	15	9.55	../uploads/capas/capa_6a30b40ad2b42.webp	t
 14	Homem de Ferro 3	Filme	15	11.50	../uploads/capas/capa_6a30b60f36bd6.jpg	t
