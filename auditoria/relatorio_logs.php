@@ -148,23 +148,23 @@
             <?php if (count($logs) > 0): ?>
                 <?php foreach ($logs as $log): ?>
                     <tr>
-                        <td>
+                        <td data-label="Data e Hora">
                             <strong><?= date('d/m/Y', strtotime($log['data_hora'])) ?></strong><br>
                             <small><?= date('H:i:s', strtotime($log['data_hora'])) ?></small>
                         </td>
-                        <td>
+                        <td data-label="Funcionário">
                             <?php if ($log['funcionario_nome']): ?>
                                 <strong style="color: var(--primary);"><?= htmlspecialchars($log['funcionario_nome']) ?></strong>
                             <?php else: ?>
                                 <span>Usuário Excluído</span>
                             <?php endif; ?>
                         </td>
-                        <td>
+                        <td data-label="Ação">
                             <span class="badge">
                                 <?= htmlspecialchars($log['acao']) ?>
                             </span>
                         </td>
-                        <td>
+                        <td data-label="Detalhes">
                             <?= htmlspecialchars($log['descricao']) ?>
                         </td>
                     </tr>

@@ -236,38 +236,126 @@ $base = isset($base_path) ? $base_path : '';
         .select2-results__option[aria-selected="true"] { background-color: var(--surface-highest) !important; color: var(--text-primary) !important; }
         .select2-results__option--highlighted[aria-selected] { background-color: var(--primary) !important; color: var(--on-primary) !important; }
 
+        /* ========================================================
+           RESPONSIVO
+           ======================================================== */
+        /* Tablets e celulares (até 768px) */
         @media (max-width: 768px) {
-            .navbar { flex-direction: row; gap: var(--gutter); padding: 16px; }
-            .navbar-links { flex-wrap: wrap; justify-content: center; width: 100%; gap: 10px;}
-            .nav-user { width: 100%; text-align: center; margin-bottom: 8px; }
-            .main-content { padding: 16px 10px; }
-            
-            .container, .card, .recibo-card, .card-aviso {
-                padding: 16px !important;
-                margin-top: 10px !important;
-                opacity: 0.94;
-            }
+            html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+            img { max-width: 100%; }
+            .capa { height: auto; }
+            .select2-container { max-width: 100%; }
+            body { font-size: 15px; line-height: 22px; }
 
-            /* Empilhar formulários de filtros */
-            .box-filtro {
-                flex-direction: column !important;
-                align-items: stretch !important;
-                gap: 12px !important;
-            }
-            .filtro-grupo { min-width: 100% !important; }
+            /* --- Navbar: logo + links na 1ª linha, usuário logado na 2ª --- */
+            .navbar { flex-wrap: wrap; align-items: center; gap: 10px 8px; padding: 10px 16px; }
+            .nav-brand { order: 1; margin-right: auto; }
+            .navbar-links { display: contents; }
+            .navbar-links a { order: 2; display: inline-flex; align-items: center; min-height: 40px; padding: 8px 12px; }
+            .nav-user { order: 3; flex: 1 0 100%; box-sizing: border-box; text-align: center; line-height: 18px; overflow-wrap: anywhere; }
+            .logo-img { height: 40px; }
 
-            /* Empilhar botões nas páginas de edição e devolução */
-            .botoes, .barra-botoes-filtro {
-                flex-direction: column !important;
-                width: 100%;
-                gap: 10px !important;
-            }
-            .botoes .btn, .barra-botoes-filtro button, .barra-botoes-filtro a {
-                width: 100% !important;
-                margin: 0 !important;
-                text-align: center;
+            /* --- Containers: respiro lateral e padding menor --- */
+            .container, .recibo-card, .card-aviso { box-sizing: border-box; width: calc(100% - 24px) !important; margin: 12px auto !important; }
+            .container, .card, .recibo-card, .card-aviso { padding: 16px !important; }
+            .container-cards { padding: 12px; box-sizing: border-box; gap: 12px; }
+            .container-cards .card { margin: 0 !important; min-width: 0; flex: 1 1 100%; }
+            .container-cards .card .btn { width: 100%; box-sizing: border-box; }
+            h2 { font-size: 22px; line-height: 28px; overflow-wrap: anywhere; }
+
+            /* --- Formulários: campos de 16px (evita zoom no iOS) e alvos de toque de 44px --- */
+            input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):not([type="submit"]),
+            select, textarea {
+                font-size: 16px !important;
+                min-height: 44px;
+                max-width: 100%;
                 box-sizing: border-box;
             }
+            input[type="date"] { min-width: 0; width: 100%; }
+            .filtro-grupo input, .filtro-grupo select { width: 100%; }
+            .checkbox-group { align-items: flex-start !important; gap: 10px; padding: 12px !important; }
+            .checkbox-group input { flex: 0 0 auto; margin-top: 2px; }
+            .checkbox-group label { line-height: 20px; }
+
+            /* --- Botões --- */
+            .btn, .btn-filtrar, .btn-limpar, button {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                min-height: 44px !important;
+                padding: 10px 16px !important;
+                box-sizing: border-box;
+                text-align: center;
+                line-height: 18px;
+            }
+            .barra-acoes { display: flex !important; flex-direction: column; gap: 10px; }
+            .barra-acoes .btn, form .btn-voltar, .container > .btn-voltar { width: 100%; margin: 0 !important; }
+
+            /* --- Filtros empilhados (botão "Filtrar" em cima) --- */
+            .box-filtro { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; padding: 14px !important; }
+            .filtro-grupo { min-width: 0 !important; width: 100%; flex: 0 0 auto !important; }
+            .barra-botoes-filtro { flex-direction: column-reverse !important; gap: 10px !important; width: 100%; }
+            .barra-botoes-filtro button, .barra-botoes-filtro a { width: 100% !important; margin: 0 !important; }
+
+            /* --- Botões lado a lado viram coluna (editar, excluir, devolução) --- */
+            .botoes { flex-direction: column !important; width: 100%; gap: 10px !important; }
+            .botoes .btn { width: 100% !important; margin: 0 !important; }
+
+            /* --- Recibo de devolução --- */
+            .linha { gap: 12px; align-items: baseline; }
+            .linha > * { min-width: 0; overflow-wrap: anywhere; }
+            .linha > *:last-child { text-align: right; }
+            .linha > *:first-child { flex: 0 0 auto; max-width: 55%; }
+
+            /* --- Select2 --- */
+            .select2-container { width: 100% !important; }
+            .select2-container--default .select2-selection--single { height: 44px !important; }
+            .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 42px !important; }
+            .select2-container--default .select2-selection--single .select2-selection__arrow { height: 42px !important; }
+            .select2-search--dropdown .select2-search__field { font-size: 16px !important; min-height: 44px; }
+            .select2-results__option { padding: 12px !important; }
+
+            /* --- Tabelas viram cartões (um por registro) --- */
+            table, thead, tbody, tr, th, td { display: block !important; }
+            table { border: 0 !important; border-radius: 0 !important; overflow: visible !important; background: transparent !important; margin-top: 12px !important; }
+            table thead { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+            table tbody tr { margin: 0 0 12px; background: var(--surface-container); border: 1px solid var(--outline); border-radius: var(--radius-card); overflow: hidden; }
+            table td {
+                position: relative;
+                min-height: 20px;
+                padding: 10px 14px 10px 44% !important;
+                text-align: right !important;
+                border-bottom: 1px solid var(--outline) !important;
+                background: transparent !important;
+                overflow-wrap: anywhere;
+            }
+            table td::before {
+                content: attr(data-label);
+                position: absolute; left: 14px; top: 10px;
+                width: calc(44% - 24px);
+                text-align: left;
+                font-family: var(--font-label); font-size: 11px; line-height: 20px;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                color: var(--outline-light);
+            }
+            table td:not([data-label])::before { content: none; }
+            table td:not([data-label]) { padding-left: 14px !important; text-align: left !important; }
+            table td[colspan] { padding: 16px !important; text-align: center !important; }
+            table tbody tr td:last-child { border-bottom: 0 !important; }
+            table tbody tr:last-child td:not(:last-child) { border-bottom: 1px solid var(--outline) !important; }
+            table td[data-label="Ações"] { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 12px 14px !important; }
+            table td[data-label="Ações"]::before { content: none; }
+            table td[data-label="Ações"] .btn { flex: 1 1 120px; margin: 0 !important; }
+        }
+
+        /* Celulares pequenos (até 480px) */
+        @media (max-width: 480px) {
+            .main-content { padding: 12px 8px; }
+            .container, .recibo-card, .card-aviso { width: calc(100% - 16px) !important; margin: 8px auto !important; }
+            .container, .card, .recibo-card, .card-aviso { padding: 14px !important; }
+            h2 { font-size: 20px; line-height: 26px; }
+            .nav-user { font-size: 11px; }
+            .total { font-size: 20px; }
         }
     </style>
 </head>
@@ -276,7 +364,7 @@ $base = isset($base_path) ? $base_path : '';
 <div class="navbar">
     <div class="nav-brand">
         <a href="<?= $base ?>index.php" style="text-decoration: none; display: flex; align-items: center;">
-            <img src="<?= $base ?>../assets/logo.svg" alt="Geek Hub Logo" class="logo-img">
+            <img src="<?= $base ?>assets/logo.svg" alt="Geek Hub Logo" class="logo-img">
         </a>
     </div>
     

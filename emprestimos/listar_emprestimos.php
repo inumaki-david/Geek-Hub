@@ -120,7 +120,7 @@
 <div class="container">
     <h2>Controle de Empréstimos</h2>
     
-    <div>
+    <div class="barra-acoes">
         <a href="../index.php" class="btn btn-voltar">⬅️ Voltar ao Painel</a>
         <a href="novo_emprestimo.php" class="btn btn-novo">Realizar Novo Empréstimo</a>
     </div>
@@ -217,25 +217,25 @@
                         $nome_categoria = array_key_exists($cat_slug, $mapa_categorias) ? $mapa_categorias[$cat_slug] : $cat_slug;
                     ?>
                     <tr>
-                        <td>#<?= $emp['id'] ?></td>
-                        <td>
+                        <td data-label="Cód">#<?= $emp['id'] ?></td>
+                        <td data-label="Membro">
                             <strong><?= htmlspecialchars($emp['membro_nome']) ?></strong><br>
                             <small style="color: #666;">CPF: <?= htmlspecialchars($emp['membro_cpf']) ?></small>
                             <?php if (!$emp['membro_status']): ?>
                                 <br><span style="color: #e53e3e; font-size: 11px; font-weight: bold;">(Inativo)</span>
                             <?php endif; ?>
                         </td>
-                        <td>
+                        <td data-label="Produto">
                             <strong><?= htmlspecialchars($emp['produto_titulo']) ?></strong>
                         </td>
-                        <td>
+                        <td data-label="Categoria">
                             <span><?= htmlspecialchars($nome_categoria) ?></span>
                         </td>
-                        <td><?= date('d/m/Y', strtotime($emp['data_inicio'])) ?></td>
-                        <td><?= date('d/m/Y', strtotime($emp['data_fim_prevista'])) ?></td>
-                        <td><small><?= htmlspecialchars($emp['funcionario_nome']) ?></small></td>
-                        <td><span class="status <?= $classe_status ?>"><?= $status_visual ?></span></td>
-                        <td>
+                        <td data-label="Data Saída"><?= date('d/m/Y', strtotime($emp['data_inicio'])) ?></td>
+                        <td data-label="Prazo"><?= date('d/m/Y', strtotime($emp['data_fim_prevista'])) ?></td>
+                        <td data-label="Funcionário"><small><?= htmlspecialchars($emp['funcionario_nome']) ?></small></td>
+                        <td data-label="Status"><span class="status <?= $classe_status ?>"><?= $status_visual ?></span></td>
+                        <td data-label="Ações">
                             <?php if ($emp['status'] != 'Concluído'): ?>
                                 <a href="devolucao.php?id=<?= $emp['id'] ?>" class="btn btn-devolver">📦 Devolver</a>
                             <?php else: ?>

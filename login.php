@@ -137,6 +137,17 @@
         }
         button:hover { background-color: #0d5bb0; }
         
+        @media (max-width: 768px) {
+            body { height: auto; min-height: 100vh; min-height: 100dvh; }
+            input { font-size: 16px; }
+            button { min-height: 48px; }
+        }
+
+        @media (max-width: 480px) {
+            .login-box { padding: 28px 20px; }
+            .logo-login { margin-bottom: 24px; }
+        }
+
         .erro { 
             color: var(--error-text); 
             background-color: var(--error-bg);

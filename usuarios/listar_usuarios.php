@@ -43,7 +43,7 @@
 <div class="container">
     <h2>Controle de Acessos e Usuários</h2>
     
-    <div>
+    <div class="barra-acoes">
         <a href="../index.php" class="btn btn-voltar">⬅️ Voltar ao Painel</a>
         <a href="cadastrar_usuario.php" class="btn btn-novo">Cadastrar Novo Usuário</a>
     </div>
@@ -62,24 +62,24 @@
         <tbody>
             <?php foreach ($usuarios as $user): ?>
                 <tr>
-                    <td>#<?= $user['id'] ?></td>
-                    <td><?= htmlspecialchars($user['nome']) ?></td>
-                    <td><?= htmlspecialchars($user['email']) ?></td>
-                    <td>
+                    <td data-label="ID">#<?= $user['id'] ?></td>
+                    <td data-label="Nome"><?= htmlspecialchars($user['nome']) ?></td>
+                    <td data-label="E-mail"><?= htmlspecialchars($user['email']) ?></td>
+                    <td data-label="Cargo">
                         <?php if ($user['perfil_acesso'] === 'Gerente'): ?>
                             <span class="badge-perfil badge-gerente">Gerente</span>
                         <?php else: ?>
                             <span class="badge-perfil badge-func">Funcionário</span>
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td data-label="Status">
                         <?php if ($user['status_ativo']): ?>
                             <span style="color: #38a169; font-weight: bold;">Ativo</span>
                         <?php else: ?>
                             <span style="color: #e53e3e; font-weight: bold;">Bloqueado</span>
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td data-label="Ações">
                         <a href="editar_usuario.php?id=<?= $user['id'] ?>" class="btn btn-editar">Editar</a>
                         <?php if ($user['id'] != $_SESSION['usuario_id']): ?>
                             <a href="excluir_usuario.php?id=<?= $user['id'] ?>&acao=<?= $user['status_ativo'] ? 'bloquear' : 'ativar' ?>" 

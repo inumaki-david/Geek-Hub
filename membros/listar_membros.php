@@ -84,29 +84,12 @@
     .barra-botoes-filtro { width: 100%; display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
     .btn-filtrar { background-color: #3182ce; padding: 10px 20px; font-weight: bold; border: none; cursor: pointer; color: white; border-radius: 4px;}
     .btn-limpar { background-color: #a0aec0; padding: 10px 15px; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;}
-
-    @media (max-width: 768px) {
-        /* Tabela para Cards */
-        table, thead, tbody, th, td, tr { display: block; }
-        thead tr { position: absolute; top: -9999px; left: -9999px; }
-        tr { margin-bottom: 10px; padding: 10px; }
-        td { border: none; position: relative; padding-left: 50%; text-align: right; }
-        td:before { 
-            position: absolute; left: 10px; width: 45%; padding-right: 10px; 
-            white-space: nowrap; text-align: left; font-weight: bold; content: attr(data-label);
-        }
-        /* Botões */
-        .btn-voltar, .btn-novo { margin: 0; }
-        .btn btn-editar, .btn btn-excluir { width: 100%; padding-left: 40%; text-align: right; padding: 8px 15px; border-radius: 4px; font-size: 14px; font-weight: bold; text-decoration: none; }
-        /* Filtros */
-        .filtro-grupo { flex: 1 1 100%; }
-    }
 </style>
 
 <div class="container">
     <h2>Gerenciamento de Membros</h2>
     
-    <div>
+    <div class="barra-acoes">
         <a href="../index.php" class="btn btn-voltar">⬅️ Voltar ao Painel</a>
         <a href="cadastrar_membro.php" class="btn btn-novo">Cadastrar Novo Membro</a>
     </div>
