@@ -18,7 +18,7 @@ Para rodar este projeto na sua máquina, será necessário ter instalado um ambi
 ### Passo 1: Clonar o Repositório
 
 Abra o terminal e execute:
-```
+```bash
 # Clone este repositório
 git clone https://github.com/inumaki-david/Geek-Hub.git
 
@@ -43,7 +43,7 @@ CREATE DATABASE [geekhub_db];
 \q
 ```
 * 4 - Navegue para a pasta `db` do projeto clonado e restaure o banco de dados executando o seguinte comando:
-```
+```bash
 # Supondo que você esteja na raiz do projeto clonado
 cd db
 
@@ -59,7 +59,7 @@ cd ..
 * 1 - Na raiz do projeto, abra o ficheiro `connect.php`.
 
 * 2 - Altere as credenciais para corresponderem às do seu ambiente local PostgreSQL:
-```
+```php
 $host = 'localhost';
 $port = '5432';
 $dbname = '[nome_bd]'; // O mesmo nome que criou no Passo 2
@@ -71,7 +71,7 @@ $password = 'sua_senha_aqui'; // A sua senha do PostgreSQL
 
 Com o banco de dados configurado, inicie o servidor embutido do PHP.
 Certifique-se de que o seu terminal está na raiz do projeto e execute:
-```
+```bash
 php -S 0.0.0.0:3007
 ```
 O servidor estará ativo! Agora, basta abrir o seu navegador de preferência e acessar:
