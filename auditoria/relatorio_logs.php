@@ -17,6 +17,19 @@
     $data_inicio = isset($_GET['data_inicio']) ? $_GET['data_inicio'] : '';
     $data_fim = isset($_GET['data_fim']) ? $_GET['data_fim'] : '';
 
+    // Delimitador do CSV: ";" abre direto em colunas no Excel em português.
+    // Se o seu Excel estiver em inglês (ou usar Google Planilhas), troque por ','
+    $delimitador = ';';
+
+    // Evita "injeção de fórmulas": textos que começam com = + - @ seriam executados pelo Excel.
+    function csvSeguro($valor) {
+        $valor = (string) $valor;
+        if ($valor !== '' && strpbrk($valor[0], "=+-@\t\r") !== false) {
+            return "'" . $valor;
+        }
+        return $valor;
+    }
+
     try {
         // Puxa a lista de funcionários para o select de filtros
         $stmtUsers = $pdo->query("SELECT id, nome FROM usuarios ORDER BY nome");
@@ -53,6 +66,58 @@
         if (!empty($data_fim)) $stmt->bindValue(':data_fim', $data_fim);
 
         $stmt->execute();
+
+        // ===== EXPORTAÇÃO CSV (respeita os mesmos filtros da tela) =====
+        if (isset($_GET['exportar']) && $_GET['exportar'] === 'csv') {
+            $nome_arquivo = 'auditoria_geekhub_' . date('Y-m-d_His') . '.csv';
+
+            // Descarta qualquer saída anterior para o arquivo sair limpo
+            while (ob_get_level() > 0) { ob_end_clean(); }
+
+            header('Content-Type: text/csv; charset=UTF-8');
+            header('Content-Disposition: attachment; filename="' . $nome_arquivo . '"');
+            header('Cache-Control: no-store, no-cache, must-revalidate');
+            header('Pragma: no-cache');
+
+            $saida = fopen('php://output', 'w');
+            fwrite($saida, "\xEF\xBB\xBF"); // BOM UTF-8: o Excel exibe os acentos corretamente
+
+            fputcsv($saida, ['ID', 'Data', 'Hora', 'Funcionário', 'Ação', 'Detalhes'], $delimitador, '"', '');
+
+            $total = 0;
+            while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                fputcsv($saida, [
+                    $linha['id'],
+                    date('d/m/Y', strtotime($linha['data_hora'])),
+                    date('H:i:s', strtotime($linha['data_hora'])),
+                    csvSeguro($linha['funcionario_nome'] ?: 'Usuário Excluído'),
+                    csvSeguro($linha['acao']),
+                    csvSeguro($linha['descricao'])
+                ], $delimitador, '"', '');
+                $total++;
+            }
+            fclose($saida);
+
+            // Registra a própria exportação na auditoria
+            $filtros_usados = [];
+            if ($busca !== '') { $filtros_usados[] = 'busca "' . $busca . '"'; }
+            if (!empty($usuario_filtro)) {
+                foreach ($lista_usuarios as $u) {
+                    if ($u['id'] == $usuario_filtro) { $filtros_usados[] = 'funcionário ' . $u['nome']; }
+                }
+            }
+            if (!empty($data_inicio)) { $filtros_usados[] = 'a partir de ' . date('d/m/Y', strtotime($data_inicio)); }
+            if (!empty($data_fim)) { $filtros_usados[] = 'até ' . date('d/m/Y', strtotime($data_fim)); }
+
+            registrarLog(
+                $pdo,
+                $_SESSION['usuario_id'],
+                'Exportação de Auditoria',
+                "Exportou $total registro(s) em CSV. Filtros: " . ($filtros_usados ? implode('; ', $filtros_usados) : 'nenhum (todos os logs)') . '.'
+            );
+            exit;
+        }
+
         $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
@@ -89,6 +154,8 @@
     .barra-botoes-filtro { width: 100%; display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
     .btn-filtrar { background-color: #3182ce; padding: 10px 20px; font-weight: bold; border: none; cursor: pointer; color: white; border-radius: 4px;}
     .btn-limpar { background-color: #a0aec0; padding: 10px 15px; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;}
+    button.btn-exportar[type="submit"] { background-color: var(--success-bg) !important; color: var(--success-text) !important; border: 1px solid var(--success-text) !important; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+    button.btn-exportar[type="submit"]:hover { background-color: #12522f !important; }
     .badge { background-color: var(--surface-highest); border: 1px solid var(--outline); padding: 5px 10px; display: inline-block; white-space: nowrap; }
 </style>
 
@@ -131,6 +198,7 @@
 
         <div class="barra-botoes-filtro">
             <a href="relatorio_logs.php" class="btn-limpar">Limpar Filtros</a>
+            <button type="submit" name="exportar" value="csv" class="btn-exportar" title="Baixa em CSV os logs que correspondem aos filtros acima (sem filtros, baixa todos)">📥 Exportar CSV</button>
             <button type="submit" class="btn-filtrar">🔍 Aplicar Filtros</button>
         </div>
     </form>
